@@ -62,9 +62,9 @@ namespace Microsoft.DotNet.MSIdentity.CodeReaderWriter
             {
                 return;
             }
-
+            System.Diagnostics.Debugger.Launch();
             // Initialize CodeAnalysis.Project wrapper
-            CodeAnalysis.Project project = await CodeAnalysisHelper.LoadCodeAnalysisProjectAsync(_toolOptions.ProjectFilePath, _files);
+            CodeAnalysis.Project project = CodeAnalysisHelper.LoadCodeAnalysisProject(_toolOptions.ProjectFilePath, _files);
             if (project is null)
             {
                 return;
