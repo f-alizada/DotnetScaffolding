@@ -1,0 +1,37 @@
+<#@ template hostSpecific="true" linePragmas="false" #>
+<#@ parameter type="System.String" name="ClassNamespace" #>
+<#@ parameter type="System.String" name="ClassName" #>
+<#
+    var usings = new List<string>
+    {
+        "System",
+        "System.Collections.Generic",
+        "Microsoft.AspNetCore.Mvc",
+        "Microsoft.AspNetCore.Mvc.RazorPages"
+    };
+#>
+namespace <#= ClassNamespace #>
+{
+    public class <#= ClassName #> : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}
+
+<#
+    StringBuilder mainEnvironment = GenerationEnvironment;
+    GenerationEnvironment = new StringBuilder();
+
+    foreach (var ns in usings)
+    {
+#>
+using <#= ns #>;
+<#
+    }
+
+    WriteLine("");
+
+    GenerationEnvironment.Append(mainEnvironment);
+#>

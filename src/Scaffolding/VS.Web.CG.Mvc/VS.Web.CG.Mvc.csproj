@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Code Generators for ASP.NET Core MVC. Contains code generators for MVC Controllers and Views.</Description>
@@ -105,8 +105,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Templates\T4\RazorPages\RazorPageEmptyGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RazorPageEmptyGenerator.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="$(RepoRoot)\src\Scaffolding\VS.Web.CG\VS.Web.CG.csproj" />
     <ProjectReference Include="$(RepoRoot)\src\Shared\Microsoft.DotNet.Scaffolding.Shared\Microsoft.DotNet.Scaffolding.Shared.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0-preview.3.22175.4" />
+    <PackageReference Include="System.CodeDom" Version="7.0.0-rc.1.22426.10" />
+    <PackageReference Include="Mono.TextTemplating" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -122,6 +133,21 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MessageStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\T4\RazorPages\RazorPageEmptyGenerator2.tt">
+      <LastGenOutput>RazorPageEmptyGenerator2.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="Templates\T4\RazorPages\RazorPageEmptyGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RazorPageEmptyGenerator.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>
