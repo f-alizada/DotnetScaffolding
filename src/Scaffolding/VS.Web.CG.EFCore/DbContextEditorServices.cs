@@ -77,9 +77,22 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             return await AddNewContextItemsInternal(templateName, dbContextTemplateModel);
         }
 
+        public async Task<SyntaxTree> AddNewContextT4(NewDbContextTemplateModel dbContextTemplateModel)
+        {
+            if (dbContextTemplateModel == null)
+            {
+                throw new ArgumentNullException(nameof(dbContextTemplateModel));
+            }
+
+            var templateName = "DataContextGenerator.tt";
+
+            return await AddNewContextItemsInternal(templateName, dbContextTemplateModel);
+        }
+
         private async Task<SyntaxTree> AddNewContextItemsInternal(string templateName, NewDbContextTemplateModel dbContextTemplateModel)
         {
             var templatePath = _filesLocator.GetFilePath(templateName, TemplateFolders);
+            var abc = T4TemplateHelper.GetTemplateFoldersT4(_applicationInfo.ApplicationBasePath, Path.Combine("T4", "RazorPages"), _projectContext)?.FirstOrDefault();
             Contract.Assert(File.Exists(templatePath));
 
             var templateContent = File.ReadAllText(templatePath);

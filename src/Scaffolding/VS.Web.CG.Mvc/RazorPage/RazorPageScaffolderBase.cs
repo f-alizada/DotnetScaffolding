@@ -33,7 +33,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
         internal static readonly string ContentVersionDefault = "Default";
         internal static readonly string ContentVersionBootstrap3 = "Bootstrap3";
         internal static readonly string ContentVersionBootstrap4 = "Bootstrap4";
-
+        internal static readonly string DefaultContentT4 = Path.Combine("T4", "RazorPages");
         internal static readonly string DefaultContentRelativeBaseDir = "RazorPageGenerator";
         internal static readonly string VersionedContentRelativeBaseDir = "RazorPageGenerator_Versioned";
 
@@ -112,7 +112,6 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
         {
             string contentVersion = null;
             string bootstrapVersion = null;
-
             if (TemplateModel is RazorPageGeneratorTemplateModel2 templateModel2)
             {
                 bootstrapVersion = templateModel2.BootstrapVersion;

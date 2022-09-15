@@ -39,69 +39,19 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             IFileSystem fileSystem,
             ILogger logger)
         {
-            if (projectContext == null)
-            {
-                throw new ArgumentNullException(nameof(projectContext));
-            }
-
-            if (applicationInfo == null)
-            {
-                throw new ArgumentNullException(nameof(applicationInfo));
-            }
-
-            if (loader == null)
-            {
-                throw new ArgumentNullException(nameof(loader));
-            }
-
-            if (modelTypesLocator == null)
-            {
-                throw new ArgumentNullException(nameof(modelTypesLocator));
-            }
-
-            if (dbContextEditorServices == null)
-            {
-                throw new ArgumentNullException(nameof(dbContextEditorServices));
-            }
-
-            if (packageInstaller == null)
-            {
-                throw new ArgumentNullException(nameof(packageInstaller));
-            }
-
-            if (serviceProvider == null)
-            {
-                throw new ArgumentNullException(nameof(serviceProvider));
-            }
-
-            if (logger == null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-
-            if(workspace == null)
-            {
-                throw new ArgumentNullException(nameof(workspace));
-            }
-
-            if(fileSystem == null)
-            {
-                throw new ArgumentNullException(nameof(fileSystem));
-            }
-
-            _projectContext = projectContext;
-            _applicationInfo = applicationInfo;
-            _loader = loader;
-            _modelTypesLocator = modelTypesLocator;
-            _dbContextEditorServices = dbContextEditorServices;
-            _packageInstaller = packageInstaller;
-            _serviceProvider = serviceProvider;
-            _logger = logger;
-            _workspace = workspace;
-            _fileSystem = fileSystem;
+            _projectContext = projectContext ?? throw new ArgumentNullException(nameof(projectContext));
+            _applicationInfo = applicationInfo ?? throw new ArgumentNullException(nameof(applicationInfo));
+            _loader = loader ?? throw new ArgumentNullException(nameof(loader));
+            _modelTypesLocator = modelTypesLocator ?? throw new ArgumentNullException(nameof(modelTypesLocator));
+            _dbContextEditorServices = dbContextEditorServices ?? throw new ArgumentNullException(nameof(dbContextEditorServices));
+            _packageInstaller = packageInstaller ?? throw new ArgumentNullException(nameof(packageInstaller));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
+            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem)); ;
         }
 
-        public async Task<ContextProcessingResult> GetModelMetadata(string dbContextFullTypeName, ModelType modelTypeSymbol, string areaName, bool useSqlite)
+        public async Task<ContextProcessingResult> GetModelMetadata(string dbContextFullTypeName, ModelType modelTypeSymbol, string areaName, bool useSqlite, bool useT4 = false)
         {
             return await GetModelMetadata(dbContextFullTypeName, modelTypeSymbol, areaName, useSqlite ? DbProvider.SQLite : DbProvider.SqlServer);
         }
@@ -126,8 +76,15 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                 _fileSystem,
                 _logger);
 
-            await processor.Process();
-
+            if (useT4)
+            {
+                await processor.ProcessT4();
+            }
+            else
+            {
+                await processor.Process();
+            }
+            
             return new ContextProcessingResult()
             {
                 ContextProcessingStatus = processor.ContextProcessingStatus,

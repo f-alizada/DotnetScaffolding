@@ -40,6 +40,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
         [Option(Name = "noTypedResults", ShortName = "ntr", Description = "Flag to not use TypedResults for minimal apis.")]
         public bool NoTypedResults { get; set; }
 
+        [Option(Name = "T4", ShortName = "t4", Description = "Use this option for opting into T4 templating.")]
+        public bool T4Templating { get; set; } = false;
+
         public MinimalApiGeneratorCommandLineModel()
         {
         }

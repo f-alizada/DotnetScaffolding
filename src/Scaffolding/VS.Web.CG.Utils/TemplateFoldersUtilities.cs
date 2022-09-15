@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.VisualStudio.Web.CodeGeneration.Utils;
 
@@ -38,11 +39,17 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration
             {
                 throw new ArgumentNullException(nameof(projectContext));
             }
-
+            var assemblyPath = Assembly.GetEntryAssembly().Location;
+            var dotnetToolsPath = string.Empty;
+            if (!string.IsNullOrEmpty(assemblyPath))
+            {
+                dotnetToolsPath = Path.GetFullPath(Path.GetDirectoryName(assemblyPath));
+            }
             var rootFolders = new List<string>();
             var templateFolders = new List<string>();
 
             rootFolders.Add(applicationBasePath);
+            rootFolders.Add(dotnetToolsPath);
 
             var dependency = GetPackage(projectContext, containingProject);
 

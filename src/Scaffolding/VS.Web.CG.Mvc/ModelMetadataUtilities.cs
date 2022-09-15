@@ -15,8 +15,8 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
     internal static class ModelMetadataUtilities
     {
         internal static async Task<ModelTypeAndContextModel> ValidateModelAndGetCodeModelMetadata(
-            CommonCommandLineModel commandLineModel, 
-            ICodeModelService codeModeService, 
+            CommonCommandLineModel commandLineModel,
+            ICodeModelService codeModeService,
             IModelTypesLocator modelTypesLocator)
         {
             ModelType model = ValidationUtil.ValidateType(commandLineModel.ModelClass, "model", modelTypesLocator);
@@ -32,8 +32,8 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
         }
 
         internal static async Task<ModelTypeAndContextModel> ValidateModelAndGetEFMetadata(
-            CommonCommandLineModel commandLineModel, 
-            IEntityFrameworkService entityFrameworkService, 
+            CommonCommandLineModel commandLineModel,
+            IEntityFrameworkService entityFrameworkService,
             IModelTypesLocator modelTypesLocator,
             ILogger logger,
             string areaName)
@@ -55,7 +55,8 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
                 dbContextFullName,
                 model,
                 areaName,
-                commandLineModel.DatabaseProvider);
+                commandLineModel.DatabaseProvider,
+                commandLineModel.T4Templating);
 
             return new ModelTypeAndContextModel()
             {
@@ -93,7 +94,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
                 {
                     commandLineModel.DatabaseProvider = ValidateDatabaseProvider(commandLineModel.DatabaseProviderString, logger);
                 }
-                
+
                 modelMetadata = await entityFrameworkService.GetModelMetadata(
                     dbContextFullName,
                     model,

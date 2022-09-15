@@ -315,7 +315,6 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.Tools
 
         private int Build(ILogger logger, string projectPath, string configuration, string shortFramework, string buildBasePath)
         {
-
             logger.LogMessage(Resources.BuildingProject);
             var buildResult = DotNetBuildCommandHelper.Build(
                 projectPath,

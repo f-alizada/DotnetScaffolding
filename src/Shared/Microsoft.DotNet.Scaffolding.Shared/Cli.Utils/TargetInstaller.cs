@@ -2,25 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using Microsoft.DotNet.Scaffolding.Shared;
 
-namespace Microsoft.VisualStudio.Web.CodeGeneration.Tools
+namespace Microsoft.DotNet.Scaffolding.Shared
 {
     public class TargetInstaller
     {
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         public TargetInstaller(ILogger logger)
         {
-            if (logger == null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public bool EnsureTargetImported(string projectName, string targetLocation)
@@ -51,8 +44,8 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.Tools
             var toolType = typeof(TargetInstaller);
             var toolAssembly = toolType.GetTypeInfo().Assembly;
             var toolNamespace = toolType.Namespace;
-            var toolImportTargetsResourceName = $"{toolNamespace}.compiler.resources.{ToolsImportTargetsName}";
-
+            var toolImportTargetsResourceName = $"{toolNamespace}.{ToolsImportTargetsName}";
+            var resources = toolAssembly.GetManifestResourceNames();
             using (var stream = toolAssembly.GetManifestResourceStream(toolImportTargetsResourceName))
             {
                 var targetBytes = new byte[stream.Length];

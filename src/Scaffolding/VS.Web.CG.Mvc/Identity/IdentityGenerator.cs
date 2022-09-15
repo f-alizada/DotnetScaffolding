@@ -20,6 +20,7 @@ using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
 {
@@ -105,7 +106,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
 
             // For non-default bootstrap versions, the content is packaged under "Identity_Versioned\[Version_Identifier]\*"
             // Note: In the future, if content gets pivoted on things other than bootstrap, this logic will need enhancement.
-            if (string.Equals(templateModel2.ContentVersion, ContentVersionBootstrap3, StringComparison.Ordinal) || 
+            if (string.Equals(templateModel2.ContentVersion, ContentVersionBootstrap3, StringComparison.Ordinal) ||
                 string.Equals(templateModel2.ContentVersion, ContentVersionBootstrap4, StringComparison.Ordinal))
             {
                 return TemplateFoldersUtilities.GetTemplateFolders(
@@ -194,7 +195,14 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
                 return;
             }
 
-            var templateModelBuilder = new IdentityGeneratorTemplateModelBuilder(
+            if (commandlineModel.T4Templating)
+            {
+                await GenerateCodeT4(commandlineModel);
+            }
+            // older razor templating
+            else
+            {
+                var templateModelBuilder = new IdentityGeneratorTemplateModelBuilder(
                 commandlineModel,
                 _applicationInfo,
                 _projectContext,
@@ -203,19 +211,28 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
                 _fileSystem,
                 _logger);
 
-            var templateModel = await templateModelBuilder.ValidateAndBuild();
-            EnsureFolderLayout(IdentityAreaName, templateModel);
-            //Identity is not supported in minimal apps.
-            var minimalApp = await ProjectModifierHelper.IsMinimalApp(new ModelTypesLocator(_workspace));
-            if (minimalApp)
-            {
-                //remove IdentityGeneratorFilesConfig.IdentityHostingStartup. This is not super performant but doesn't need to be.
-                int hostingStartupIndex = Array.IndexOf(templateModel.FilesToGenerate, IdentityGeneratorFilesConfig.IdentityHostingStartup);
-                if (hostingStartupIndex != -1)
+                var templateModel = await templateModelBuilder.ValidateAndBuild();
+                EnsureFolderLayout(IdentityAreaName, templateModel);
+                //Identity is not supported in minimal apps.
+                var minimalApp = await ProjectModifierHelper.IsMinimalApp(new ModelTypesLocator(_workspace));
+                if (minimalApp)
                 {
-                    templateModel.FilesToGenerate = templateModel.FilesToGenerate.Where((source, index) => index != hostingStartupIndex).ToArray();
+                    //remove IdentityGeneratorFilesConfig.IdentityHostingStartup. This is not super performant but doesn't need to be.
+                    int hostingStartupIndex = Array.IndexOf(templateModel.FilesToGenerate, IdentityGeneratorFilesConfig.IdentityHostingStartup);
+                    if (hostingStartupIndex != -1)
+                    {
+                        templateModel.FilesToGenerate = templateModel.FilesToGenerate.Where((source, index) => index != hostingStartupIndex).ToArray();
+                    }
+
+                    //edit Program.cs in minimal hosting scenario
+                    await EditProgramCsForIdentity(
+                        new ModelTypesLocator(_workspace),
+                        templateModel.DbContextClass,
+                        templateModel.UserClass,
+                        templateModel.DbContextNamespace,
+                        templateModel.UseSQLite);
                 }
-                
+
                 //edit Program.cs in minimal hosting scenario
                 await EditProgramCsForIdentity(
                     new ModelTypesLocator(_workspace),
@@ -223,10 +240,15 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
                     templateModel.UserClass,
                     templateModel.DbContextNamespace,
                     templateModel.DatabaseProvider);
-            }
 
-            await AddTemplateFiles(templateModel);
-            await AddStaticFiles(templateModel);
+                await AddTemplateFiles(templateModel);
+                await AddStaticFiles(templateModel);
+            }
+        }
+
+        private Task GenerateCodeT4(IdentityGeneratorCommandLineModel viewGeneratorModel)
+        {
+            throw new NotImplementedException(string.Format(MessageStrings.T4TemplatingNotSupported, nameof(Identity)));
         }
 
         private string GetIdentityCodeModifierConfig()

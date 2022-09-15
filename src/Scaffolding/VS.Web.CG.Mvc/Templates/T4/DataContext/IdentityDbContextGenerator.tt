@@ -1,0 +1,57 @@
+<#@ template hostSpecific="true" linePragmas="false" #>
+<#@ parameter type="System.String" name="DbContextTypeName" #>
+<#@ parameter type="System.String" name="ModelTypeName" #>
+<#@ parameter type="System.String" name="UserClass" #>
+<#@ parameter type="System.String" name="UserClassNamespace" #>
+<#@ parameter type="System.String" name="ModelTypeFullName" #>
+<#@ parameter type="System.String" name="DbContextBaseClass" #>
+<#@ parameter type="System.String" name="DbContextNamespace" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text" #>
+<#
+    var usings = new List<string>
+    {
+        "Microsoft.AspNetCore.Identity",
+        "Microsoft.AspNetCore.Identity.EntityFrameworkCore",
+        "Microsoft.EntityFrameworkCore"
+    };
+
+    if (!string.IsNullOrEmpty(UserClassNamespace))
+    {
+        usings.Add(UserClassNamespace);
+    }
+#>
+namespace <#= DbContextNamespace #>
+{
+    public class <#= DbContextTypeName #> : IdentityDbContext<<#= UserClass #>>
+    {
+        public <#= DbContextTypeName #> (DbContextOptions<<#= DbContextTypeName #>> options)
+            : base(options)
+        {
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            // Customize the ASP.NET Identity model and override the defaults if needed.
+            // For example, you can rename the ASP.NET Identity table names and more.
+            // Add your customizations after calling base.OnModelCreating(builder);
+        }
+    }
+}
+
+<#
+    StringBuilder mainEnvironment = GenerationEnvironment;
+    GenerationEnvironment = new StringBuilder();
+
+    foreach (var ns in usings)
+    {
+#>
+using <#= ns #>;
+<#
+    }
+
+    WriteLine("");
+
+    GenerationEnvironment.Append(mainEnvironment);
+#>

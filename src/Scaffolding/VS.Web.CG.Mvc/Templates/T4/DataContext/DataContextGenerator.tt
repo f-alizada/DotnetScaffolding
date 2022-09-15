@@ -1,0 +1,52 @@
+<#@ template hostSpecific="true" linePragmas="false" #>
+<#@ parameter type="System.String" name="DbContextTypeName" #>
+<#@ parameter type="System.String" name="ModelTypeName" #>
+<#@ parameter type="System.String" name="ModelTypeFullName" #>
+<#@ parameter type="System.String" name="DbContextBaseClass" #>
+<#@ parameter type="System.String" name="DbContextNamespace" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text" #>
+<#
+    var usings = new List<string>
+    {
+        "Microsoft.AspNetCore.Mvc.RazorPages"
+    };
+
+    string baseClassName;
+    if (string.Equals(DbContextTypeName, "DbContext", StringComparison.Ordinal))
+    {
+        baseClassName = "Microsoft.EntityFrameworkCore.DbContext";
+    }
+    else
+    {
+        baseClassName = "DbContext";
+    }
+#>
+namespace <#= DbContextNamespace #>
+{>
+    public class <#= DbContextTypeName #> : <#= baseClassName #>
+    {
+        public <#= DbContextTypeName #> (DbContextOptions<<#= DbContextTypeName #>> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<<#= ModelTypeFullName #>> <#= ModelTypeName #> { get; set; } = default!;
+    }
+}
+
+<#
+    StringBuilder mainEnvironment = GenerationEnvironment;
+    GenerationEnvironment = new StringBuilder();
+
+    foreach (var ns in usings)
+    {
+#>
+using <#= ns #>;
+<#
+    }
+
+    WriteLine("");
+
+    GenerationEnvironment.Append(mainEnvironment);
+#>

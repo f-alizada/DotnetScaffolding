@@ -22,6 +22,12 @@ namespace Microsoft.DotNet.Scaffolding.Shared
         private const string PackageFoldersProperty = "packageFolders";
         private const string DependencyProperty = "dependencies";
         private const string TypeProperty = "type";
+        private static readonly string[] ExcludedAssemblies =
+        {
+            "dotnet-aspnet-codegenerator-design.dll",
+            "dotnet-aspnet-codegenerator-design.exe",
+            "dotnet-scaffold.dll"
+        };
 
         internal static IEnumerable<DependencyDescription> GetPackageDependencies(string projectAssetsFile, string tfm, string tfmMoniker)
         {
@@ -135,7 +141,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared
                 var path = packageFolderPath.EnumerateObject().Any() ? packageFolderPath.EnumerateObject().First().Name : string.Empty;
                 if (!string.IsNullOrEmpty(fullName) && !string.IsNullOrEmpty(path) && package.Value.TryGetProperty(TypeProperty, out var type))
                 {
-                    //fullName is in the format {Package Name}/{Version} for example "System.Text.MoreText/2.1.1" Split into tuple. 
+                    //fullName is in the format {Package Name}/{Version} for example "System.Text.MoreText/2.1.1" Split into tuple.
                     Tuple<string, string> nameAndVersion = GetName(fullName);
                     if (nameAndVersion != null)
                     {
@@ -199,6 +205,26 @@ namespace Microsoft.DotNet.Scaffolding.Shared
                 }
             }
             return variableValue;
+        }
+
+        internal static IEnumerable<ResolvedReference> GetScaffoldingToolAssemblies(string assembliesPath)
+        {
+            var compilationAssemblies = new List<ResolvedReference>();
+            if (!string.IsNullOrEmpty(assembliesPath))
+            {
+                var fileList = Directory.GetFiles(assembliesPath);
+                foreach (var file in fileList)
+                {
+                    var resolvedPath = file.ToString();
+                    var fileName = Path.GetFileName(resolvedPath);
+                    if ((resolvedPath.EndsWith(".dll") || resolvedPath.EndsWith(".exe")) && !ExcludedAssemblies.Contains(fileName))
+                    {
+                        var reference = new ResolvedReference(fileName, resolvedPath);
+                        compilationAssemblies.Add(reference);
+                    }
+                }
+            }
+            return compilationAssemblies;
         }
     }
 }

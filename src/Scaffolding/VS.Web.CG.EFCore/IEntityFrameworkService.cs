@@ -12,7 +12,8 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
     {
         [Obsolete]
         Task<ContextProcessingResult> GetModelMetadata(string dbContextFullTypeName, ModelType modelTypeName, string areaName, bool useSqlite);
-         /// <summary>
+
+        /// <summary>
         /// Gets the EF metadata for given context and model.
         /// Method takes in full type name of context and if there is no context with that name,
         /// attempts to create one. When creating a context, the method also tries to modify Startup
@@ -30,5 +31,10 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
         /// <param name="databaseProvider">enum DbProvider (default DbProvider.SqlServer) </param>
         /// <returns>Returns <see cref="ContextProcessingResult"/>.</returns>
         Task<ContextProcessingResult> GetModelMetadata(string dbContextFullTypeName, ModelType modelTypeName, string areaName, DbProvider databaseProvider);
+
+        /// <param name="useSqlite">flag for using sqlite instead of sqlserver </param>
+        /// <param name="useT4">flag for using T4 templating instead of razor templating. default false for backwards compat</param>
+        /// <returns>Returns <see cref="ContextProcessingResult"/>.</returns>
+        Task<ContextProcessingResult> GetModelMetadata(string dbContextFullTypeName, ModelType modelTypeName, string areaName, bool useSqlite, bool useT4 = false);
     }
 }

@@ -41,5 +41,9 @@
       <LastGenOutput>MessageStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="$(RepoRoot)\tools\dotnet-aspnet-codegenerator\compiler\resources\**\*" />
+  </ItemGroup>
   
 </Project>

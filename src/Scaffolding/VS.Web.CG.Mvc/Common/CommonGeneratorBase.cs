@@ -4,6 +4,8 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
@@ -46,6 +48,18 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
             }
 
             return outputPath;
+        }
+
+        protected async Task AddFileHelper(IFileSystem fileSystem, string outputPath, Stream sourceStream)
+        {
+            fileSystem.CreateDirectory(Path.GetDirectoryName(outputPath));
+
+            if (fileSystem.FileExists(outputPath))
+            {
+                fileSystem.MakeFileWritable(outputPath);
+            }
+
+            await fileSystem.AddFileAsync(outputPath, sourceStream);
         }
     }
 }
