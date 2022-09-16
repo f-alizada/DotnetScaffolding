@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating;
 using Microsoft.VisualStudio.Web.CodeGeneration.Templating;
+using Microsoft.Extensions.DependencyModel;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
 {
@@ -66,6 +67,8 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
                     { "RazorPageClassName" , "ClassName" },
                     { "Namespace", "TestNamespace" }
                 };
+                var cc = DependencyContext.Default?.CompileLibraries;
+                var rr = DependencyContext.Default?.RuntimeLibraries;
                 var result = ti.InvokeTemplate(@"D:\Stuff\scaffolding\src\Scaffolding\VS.Web.CG.Mvc\Templates\T4\RazorPages\RazorPage_Empty.tt", dictParams);
                 var outputPath = ValidateAndGetOutputPath(razorPageGeneratorModel, outputFileName: razorPageGeneratorModel.RazorPageName + Constants.CodeFileExtension);
                 //var text = result.GeneratedText;

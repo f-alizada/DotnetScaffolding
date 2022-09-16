@@ -136,10 +136,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Templates\T4\RazorPages\RazorPageEmptyGenerator2.tt">
-      <LastGenOutput>RazorPageEmptyGenerator2.cs</LastGenOutput>
-      <Generator>TextTemplatingFileGenerator</Generator>
-    </None>
     <None Update="Templates\T4\RazorPages\RazorPageEmptyGenerator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RazorPageEmptyGenerator.cs</LastGenOutput>

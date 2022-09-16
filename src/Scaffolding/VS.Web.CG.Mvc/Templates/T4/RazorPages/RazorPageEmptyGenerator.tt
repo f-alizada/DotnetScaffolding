@@ -1,18 +1,18 @@
 <#@ template hostSpecific="true" linePragmas="false" #>
-<#@ parameter type="System.String" name="ClassNamespace" #>
-<#@ parameter type="System.String" name="ClassName" #>
+<#@ assembly name="Microsoft.VisualStudio.Web.CodeGenerators.Mvc" #>
+<#@ parameter type="Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating.ScaffoldingTemplatingModel" name="Options" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text" #>
 <#
     var usings = new List<string>
     {
         "System",
         "System.Collections.Generic",
-        "Microsoft.AspNetCore.Mvc",
-        "Microsoft.AspNetCore.Mvc.RazorPages"
     };
 #>
-namespace <#= ClassNamespace #>
+namespace Options.ClassNamespace
 {
-    public class <#= ClassName #> : PageModel
+    public Options.ClassName Testing
     {
         public void OnGet()
         {
