@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Build.Evaluation;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using System;
+using System.Configuration;
 
 namespace Microsoft.VisualStudio.Web.CodeGeneration.Utils
 {
@@ -15,17 +16,21 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.Utils
             if (projectReferenceStrings != null && projectReferenceStrings.Any())
             {
                 foreach (string projectReferenceString in projectReferenceStrings)
-                try
                 {
-                    var currentProject = new Project(Path.GetFullPath(projectReferenceString));
-                    if (currentProject != null)
+                    var projectFullPath = Path.GetFullPath(projectReferenceString);
+                    try
                     {
-                        projectReferenceInformation.Add(GetProjectInformation(currentProject));
+                        //DoStuff();
+                        var currentProject = new Project(projectFullPath);
+                        if (currentProject != null)
+                        {
+                            projectReferenceInformation.Add(GetProjectInformation(currentProject));
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException($"Could not load information for project { projectReferenceString }", ex);
+                    catch (Exception ex)
+                    {
+                        throw new InvalidOperationException($"Could not load information for project {projectFullPath}", ex);
+                    }
                 }
             } 
             return projectReferenceInformation;

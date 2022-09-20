@@ -51,6 +51,8 @@ namespace Microsoft.Extensions.ProjectModel
                 .OnOutputLine(o => output.Add(o))
                 .Execute();
 
+            DoStuff();
+
             if (result.ExitCode != 0)
             {
                 throw CreateProjectContextCreationFailedException(_projectPath, errors);
@@ -78,6 +80,26 @@ namespace Microsoft.Extensions.ProjectModel
             }
 
             return new InvalidOperationException(errorMsg);
+        }
+
+        private void DoStuff()
+        {
+            System.Diagnostics.Debugger.Launch();
+            var errors = new List<string>();
+            var output = new List<string>();
+            var tmpFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            var result = Command.CreateDotNet(
+                "msbuild",
+                new string[]
+                {
+                    @"D:\Stuff\Test Scripts\test11\library\library.csproj",
+                    $"/t:Compile",
+                    $"/p:OutputFile={tmpFile};Configuration=Debug",
+                    "-restore"
+                })
+                .OnErrorLine(e => errors.Add(e))
+                .OnOutputLine(o => output.Add(o))
+                .Execute();
         }
     }
 }

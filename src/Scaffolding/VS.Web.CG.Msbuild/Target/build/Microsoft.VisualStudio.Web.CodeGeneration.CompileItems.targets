@@ -1,0 +1,40 @@
+<!--
+ Copyright (c) .NET Foundation. All rights reserved.
+ Licensed under the Apache License, Version 2.0.
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<!--
+**********************************************************************************
+Target: EvaluateProjectInfoForCodeGeneration
+
+Outputs the Project Information needed for CodeGeneration to a file.
+
+**********************************************************************************
+-->
+
+  <PropertyGroup>
+    <EvaluateCompileItemsForCodeGeneration>
+      $(EvaluateCompileItemsForCodeGeneration);
+    </EvaluateCompileItemsForCodeGeneration>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <EvaluateCompileItemsForCodeGenerationPath>$(MSBuildThisFileDirectory)..\toolassets\net7.0\Microsoft.VisualStudio.Web.CodeGeneration.Msbuild.dll</EvaluateCompileItemsForCodeGenerationPath>
+  </PropertyGroup>
+
+  <UsingTask TaskName="CompileItemsWriter"
+             AssemblyFile="$(EvaluateCompileItemsForCodeGenerationPath)" />
+
+  <Target Name="EvaluateCompileItems" DependsOnTargets="$(EvaluateCompileItemsForCodeGeneration)">
+
+    <CompileItemsWriter OutputFile ="$(OutputFile)"
+                        Name ="$(ProjectName)"
+                        ProjectReferences ="@(ProjectReference)"
+                        AssemblyFullPath ="$(TargetPath)"
+                        CompilationItems ="@(Compile)"
+                        Configuration="$(Configuration)"
+                        ProjectFullPath="$(MSBuildProjectFullPath)"
+    />
+ </Target>
+</Project>

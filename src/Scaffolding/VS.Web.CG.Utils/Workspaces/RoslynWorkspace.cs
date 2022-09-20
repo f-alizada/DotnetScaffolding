@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
@@ -29,6 +31,9 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.Utils
             string configuration = "debug")
             : base(MefHostServices.DefaultHost, "Custom")
         {
+            //SetMsBuildExePath();
+            //System.Diagnostics.Debugger.Launch();
+            Environment.SetEnvironmentVariable("MSBUILD_EXE_PATH", @"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\Microsoft.Build.dll");
             Requires.NotNull(projectInformation, nameof(projectInformation));
             var id = AddProject(projectInformation, configuration);
             // Since we have resolved all references, we can directly use them as MetadataReferences.
