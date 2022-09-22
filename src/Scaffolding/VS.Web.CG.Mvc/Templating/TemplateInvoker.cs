@@ -58,29 +58,6 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
                 throw new ArgumentNullException(nameof(templateParameters));
             }
 
-            /*            TemplateProcessingResult result = new TemplateProcessingResult();
-
-                        TextTemplatingEngineHost engineHost = new TextTemplatingEngineHost(_serviceProvider);
-                        foreach (KeyValuePair<string, object> entry in templateParameters)
-                        {
-                            if (entry.Value == null)
-                            {
-                                throw new InvalidOperationException(
-                                    string.Format(CultureInfo.CurrentCulture,
-                                        "ABCDE",
-                                        entry.Key,
-                                        templatePath));
-                            }
-
-                            engineHost.Session.Add(entry.Key, entry.Value);
-                        }
-
-                        var vsTextTemplating = new TemplatingEngine();
-                        result.GeneratedText = vsTextTemplating.ProcessTemplate(
-                            File.ReadAllText(templatePath),
-                            engineHost);
-
-                        return result;*/
             System.Diagnostics.Debugger.Launch();
             var host = new TextTemplatingEngineHost(_serviceProvider)
             {
@@ -100,12 +77,6 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
             if (contextTemplate != null)
             {
                 contextTemplate.Initialize();
-                //generatedCode = new TemplatingEngine().ProcessTemplate(File.ReadAllText(contextTemplate), host);
-                //CheckEncoding(host.OutputEncoding);
-                //HandleErrors(host);
-
-                //CompiledTemplate compiledEntityTypeTemplate = new TemplatingEngine().CompileTemplate(File.ReadAllText(host.TemplateFile), host);
-                //generatedCode = compiledEntityTypeTemplate.Process();
                 generatedCode = ProcessTemplate(contextTemplate);
             }
             return generatedCode;

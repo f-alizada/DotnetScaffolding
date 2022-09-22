@@ -189,17 +189,11 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
         /// </summary>
         public virtual string ResolveAssemblyReference(string assemblyReference)
         {
-            var cc = DependencyContext.Default?.CompileLibraries;
-            var rr = DependencyContext.Default?.RuntimeLibraries;
             var path = DependencyContext.Default?.CompileLibraries
                 .FirstOrDefault(l => l.Assemblies.Any(a => Path.GetFileNameWithoutExtension(a) == assemblyReference))
                 ?.ResolveReferencePaths()
                 .First(p => Path.GetFileNameWithoutExtension(p) == assemblyReference);
 
-           /* var path2 = DependencyContext.Default?.RuntimeLibraries
-                .FirstOrDefault(l => l.Assemblies.Any(a => Path.GetFileNameWithoutExtension(a) == assemblyReference))
-                ?.ResolveReferencePaths()
-                .First(p => Path.GetFileNameWithoutExtension(p) == assemblyReference);*/
             if (path != null)
             {
                 return path;
