@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Code Generators for ASP.NET Core MVC. Contains code generators for MVC Controllers and Views.</Description>
@@ -105,6 +105,34 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Templates\T4\Api\ApiActionsControllerGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApiActionsControllerGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\T4\Api\ApiActionsControllerGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\Api\ApiEmptyControllerGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApiEmptyControllerGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\T4\Api\ApiEmptyControllerGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\DataContext\DataContextGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataContextGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\T4\DataContext\IdentityDbContextGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IdentityDbContextGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\RazorPageCreateGenerator.cs">
+      <DependentUpon>RazorPageCreateGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\RazorPageEmptyGenerator.Interfaces.cs" />
     <Compile Include="Templates\T4\RazorPages\RazorPageEmptyGenerator.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -136,14 +164,40 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Templates\T4\Api\ApiActionsControllerGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>ApiActionsControllerGenerator.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\T4\Api\ApiEmptyControllerGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>ApiEmptyControllerGenerator.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\T4\DataContext\DataContextGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>DataContextGenerator.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\T4\DataContext\IdentityDbContextGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>IdentityDbContextGenerator.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\T4\RazorPages\RazorPageCreateGenerator.tt">
+      <LastGenOutput>RazorPageCreateGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
     <None Update="Templates\T4\RazorPages\RazorPageEmptyGenerator.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>RazorPageEmptyGenerator.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Templates\T4\Identity\" />
+    <Folder Include="Templates\T4\MinimalApi\" />
+    <Folder Include="Templates\T4\MVC\" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
+namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.DataContext
 {
     using System.Collections.Generic;
     using System.Text;
@@ -17,7 +17,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
     /// Class to produce the template output
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public partial class RazorPageEmptyGenerator : RazorPageEmptyGeneratorBase
+    public partial class DataContextGenerator : DataContextGeneratorBase
     {
         /// <summary>
         /// Create the template output
@@ -30,12 +30,32 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
         "Microsoft.AspNetCore.Mvc.RazorPages"
     };
 
+    string baseClassName;
+    if (string.Equals(DbContextTypeName, "DbContext", StringComparison.Ordinal))
+    {
+        baseClassName = "Microsoft.EntityFrameworkCore.DbContext";
+    }
+    else
+    {
+        baseClassName = "DbContext";
+    }
+
             this.Write("namespace ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
-            this.Write("\r\n{\r\n    public class ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(RazorPageClassName));
-            this.Write(" : PageModel\r\n    {\r\n        public void OnGet()\r\n        {\r\n        }\r\n    }\r\n}\r" +
-                    "\n\r\n");
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbContextNamespace));
+            this.Write("\r\n{>\r\n    public class ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbContextTypeName));
+            this.Write(" : ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(baseClassName));
+            this.Write("\r\n    {\r\n        public ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbContextTypeName));
+            this.Write(" (DbContextOptions<");
+            this.Write(this.ToStringHelper.ToStringWithCulture(DbContextTypeName));
+            this.Write("> options)\r\n            : base(options)\r\n        {\r\n        }\r\n\r\n        public D" +
+                    "bSet<");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ModelTypeFullName));
+            this.Write("> ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ModelTypeName));
+            this.Write(" { get; set; } = default!;\r\n    }\r\n}\r\n\r\n");
 
     StringBuilder mainEnvironment = GenerationEnvironment;
     GenerationEnvironment = new StringBuilder();
@@ -71,29 +91,68 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
             }
         }
 
-private string _RazorPageClassNameField;
+private string _DbContextTypeNameField;
 
 /// <summary>
-/// Access the RazorPageClassName parameter of the template.
+/// Access the DbContextTypeName parameter of the template.
 /// </summary>
-private string RazorPageClassName
+private string DbContextTypeName
 {
     get
     {
-        return this._RazorPageClassNameField;
+        return this._DbContextTypeNameField;
     }
 }
 
-private string _NamespaceField;
+private string _ModelTypeNameField;
 
 /// <summary>
-/// Access the Namespace parameter of the template.
+/// Access the ModelTypeName parameter of the template.
 /// </summary>
-private string Namespace
+private string ModelTypeName
 {
     get
     {
-        return this._NamespaceField;
+        return this._ModelTypeNameField;
+    }
+}
+
+private string _ModelTypeFullNameField;
+
+/// <summary>
+/// Access the ModelTypeFullName parameter of the template.
+/// </summary>
+private string ModelTypeFullName
+{
+    get
+    {
+        return this._ModelTypeFullNameField;
+    }
+}
+
+private string _DbContextBaseClassField;
+
+/// <summary>
+/// Access the DbContextBaseClass parameter of the template.
+/// </summary>
+private string DbContextBaseClass
+{
+    get
+    {
+        return this._DbContextBaseClassField;
+    }
+}
+
+private string _DbContextNamespaceField;
+
+/// <summary>
+/// Access the DbContextNamespace parameter of the template.
+/// </summary>
+private string DbContextNamespace
+{
+    get
+    {
+        return this._DbContextNamespaceField;
     }
 }
 
@@ -105,70 +164,169 @@ public virtual void Initialize()
 {
     if ((this.Errors.HasErrors == false))
     {
-bool RazorPageClassNameValueAcquired = false;
-if (this.Session.ContainsKey("RazorPageClassName"))
+bool DbContextTypeNameValueAcquired = false;
+if (this.Session.ContainsKey("DbContextTypeName"))
 {
-    this._RazorPageClassNameField = ((string)(this.Session["RazorPageClassName"]));
-    RazorPageClassNameValueAcquired = true;
+    this._DbContextTypeNameField = ((string)(this.Session["DbContextTypeName"]));
+    DbContextTypeNameValueAcquired = true;
 }
-if ((RazorPageClassNameValueAcquired == false))
+if ((DbContextTypeNameValueAcquired == false))
 {
-    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "RazorPageClassName");
+    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "DbContextTypeName");
     if ((string.IsNullOrEmpty(parameterValue) == false))
     {
         global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(string));
         if (((tc != null) 
                     && tc.CanConvertFrom(typeof(string))))
         {
-            this._RazorPageClassNameField = ((string)(tc.ConvertFrom(parameterValue)));
-            RazorPageClassNameValueAcquired = true;
+            this._DbContextTypeNameField = ((string)(tc.ConvertFrom(parameterValue)));
+            DbContextTypeNameValueAcquired = true;
         }
         else
         {
-            this.Error("The type \'System.String\' of the parameter \'RazorPageClassName\' did not match the " +
+            this.Error("The type \'System.String\' of the parameter \'DbContextTypeName\' did not match the t" +
+                    "ype of the data passed to the template.");
+        }
+    }
+}
+if ((DbContextTypeNameValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("DbContextTypeName");
+    if ((data != null))
+    {
+        this._DbContextTypeNameField = ((string)(data));
+    }
+}
+bool ModelTypeNameValueAcquired = false;
+if (this.Session.ContainsKey("ModelTypeName"))
+{
+    this._ModelTypeNameField = ((string)(this.Session["ModelTypeName"]));
+    ModelTypeNameValueAcquired = true;
+}
+if ((ModelTypeNameValueAcquired == false))
+{
+    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "ModelTypeName");
+    if ((string.IsNullOrEmpty(parameterValue) == false))
+    {
+        global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(string));
+        if (((tc != null) 
+                    && tc.CanConvertFrom(typeof(string))))
+        {
+            this._ModelTypeNameField = ((string)(tc.ConvertFrom(parameterValue)));
+            ModelTypeNameValueAcquired = true;
+        }
+        else
+        {
+            this.Error("The type \'System.String\' of the parameter \'ModelTypeName\' did not match the type " +
+                    "of the data passed to the template.");
+        }
+    }
+}
+if ((ModelTypeNameValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("ModelTypeName");
+    if ((data != null))
+    {
+        this._ModelTypeNameField = ((string)(data));
+    }
+}
+bool ModelTypeFullNameValueAcquired = false;
+if (this.Session.ContainsKey("ModelTypeFullName"))
+{
+    this._ModelTypeFullNameField = ((string)(this.Session["ModelTypeFullName"]));
+    ModelTypeFullNameValueAcquired = true;
+}
+if ((ModelTypeFullNameValueAcquired == false))
+{
+    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "ModelTypeFullName");
+    if ((string.IsNullOrEmpty(parameterValue) == false))
+    {
+        global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(string));
+        if (((tc != null) 
+                    && tc.CanConvertFrom(typeof(string))))
+        {
+            this._ModelTypeFullNameField = ((string)(tc.ConvertFrom(parameterValue)));
+            ModelTypeFullNameValueAcquired = true;
+        }
+        else
+        {
+            this.Error("The type \'System.String\' of the parameter \'ModelTypeFullName\' did not match the t" +
+                    "ype of the data passed to the template.");
+        }
+    }
+}
+if ((ModelTypeFullNameValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("ModelTypeFullName");
+    if ((data != null))
+    {
+        this._ModelTypeFullNameField = ((string)(data));
+    }
+}
+bool DbContextBaseClassValueAcquired = false;
+if (this.Session.ContainsKey("DbContextBaseClass"))
+{
+    this._DbContextBaseClassField = ((string)(this.Session["DbContextBaseClass"]));
+    DbContextBaseClassValueAcquired = true;
+}
+if ((DbContextBaseClassValueAcquired == false))
+{
+    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "DbContextBaseClass");
+    if ((string.IsNullOrEmpty(parameterValue) == false))
+    {
+        global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(string));
+        if (((tc != null) 
+                    && tc.CanConvertFrom(typeof(string))))
+        {
+            this._DbContextBaseClassField = ((string)(tc.ConvertFrom(parameterValue)));
+            DbContextBaseClassValueAcquired = true;
+        }
+        else
+        {
+            this.Error("The type \'System.String\' of the parameter \'DbContextBaseClass\' did not match the " +
                     "type of the data passed to the template.");
         }
     }
 }
-if ((RazorPageClassNameValueAcquired == false))
+if ((DbContextBaseClassValueAcquired == false))
 {
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("RazorPageClassName");
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("DbContextBaseClass");
     if ((data != null))
     {
-        this._RazorPageClassNameField = ((string)(data));
+        this._DbContextBaseClassField = ((string)(data));
     }
 }
-bool NamespaceValueAcquired = false;
-if (this.Session.ContainsKey("Namespace"))
+bool DbContextNamespaceValueAcquired = false;
+if (this.Session.ContainsKey("DbContextNamespace"))
 {
-    this._NamespaceField = ((string)(this.Session["Namespace"]));
-    NamespaceValueAcquired = true;
+    this._DbContextNamespaceField = ((string)(this.Session["DbContextNamespace"]));
+    DbContextNamespaceValueAcquired = true;
 }
-if ((NamespaceValueAcquired == false))
+if ((DbContextNamespaceValueAcquired == false))
 {
-    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "Namespace");
+    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "DbContextNamespace");
     if ((string.IsNullOrEmpty(parameterValue) == false))
     {
         global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(string));
         if (((tc != null) 
                     && tc.CanConvertFrom(typeof(string))))
         {
-            this._NamespaceField = ((string)(tc.ConvertFrom(parameterValue)));
-            NamespaceValueAcquired = true;
+            this._DbContextNamespaceField = ((string)(tc.ConvertFrom(parameterValue)));
+            DbContextNamespaceValueAcquired = true;
         }
         else
         {
-            this.Error("The type \'System.String\' of the parameter \'Namespace\' did not match the type of t" +
-                    "he data passed to the template.");
+            this.Error("The type \'System.String\' of the parameter \'DbContextNamespace\' did not match the " +
+                    "type of the data passed to the template.");
         }
     }
 }
-if ((NamespaceValueAcquired == false))
+if ((DbContextNamespaceValueAcquired == false))
 {
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("Namespace");
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("DbContextNamespace");
     if ((data != null))
     {
-        this._NamespaceField = ((string)(data));
+        this._DbContextNamespaceField = ((string)(data));
     }
 }
 
@@ -183,7 +341,7 @@ if ((NamespaceValueAcquired == false))
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public class RazorPageEmptyGeneratorBase
+    public class DataContextGeneratorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

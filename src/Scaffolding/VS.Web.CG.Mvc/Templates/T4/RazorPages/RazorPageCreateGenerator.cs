@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
+namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.RazorPages
 {
     using System.Collections.Generic;
     using System.Text;
@@ -17,7 +17,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
     /// Class to produce the template output
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public partial class RazorPageEmptyGenerator : RazorPageEmptyGeneratorBase
+    public partial class RazorPageCreateGenerator : RazorPageCreateGeneratorBase
     {
         /// <summary>
         /// Create the template output
@@ -27,6 +27,8 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
 
     var usings = new List<string>
     {
+        "System",
+        "System.Collections.Generic",
         "Microsoft.AspNetCore.Mvc.RazorPages"
     };
 
@@ -183,7 +185,7 @@ if ((NamespaceValueAcquired == false))
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public class RazorPageEmptyGeneratorBase
+    public class RazorPageCreateGeneratorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

@@ -195,6 +195,11 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
                 .FirstOrDefault(l => l.Assemblies.Any(a => Path.GetFileNameWithoutExtension(a) == assemblyReference))
                 ?.ResolveReferencePaths()
                 .First(p => Path.GetFileNameWithoutExtension(p) == assemblyReference);
+
+           /* var path2 = DependencyContext.Default?.RuntimeLibraries
+                .FirstOrDefault(l => l.Assemblies.Any(a => Path.GetFileNameWithoutExtension(a) == assemblyReference))
+                ?.ResolveReferencePaths()
+                .First(p => Path.GetFileNameWithoutExtension(p) == assemblyReference);*/
             if (path != null)
             {
                 return path;

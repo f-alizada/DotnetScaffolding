@@ -5,6 +5,9 @@ using System.IO;
 using Microsoft.VisualStudio.TextTemplating;
 using System.Reflection;
 using Mono.TextTemplating;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.RazorPages;
+using System.CodeDom.Compiler;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
 {
@@ -78,33 +81,51 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
                             engineHost);
 
                         return result;*/
+            System.Diagnostics.Debugger.Launch();
             var host = new TextTemplatingEngineHost(_serviceProvider)
             {
-                Session =
-                {
-                    { "RazorPageClassName" , "ClassName" },
-                    { "Namespace", "TestNamespace" }
-                }
+                TemplateFile = "D:\\Stuff\\scaffolding\\src\\Scaffolding\\VS.Web.CG.Mvc\\Templates\\T4\\RazorPages\\RazorPageEmptyGenerator.tt"
             };
 
-            //var contextTemplate = Path.Combine(options.ProjectDir!, TemplatesDirectory, DbContextTemplate);
-            var contextTemplate = @"D:\Stuff\scaffolding\src\Scaffolding\VS.Web.CG.Mvc\Templates\T4\RazorPages\RazorPage_Empty.tt";
+            var contextTemplate = new RazorPageEmptyGenerator
+            {
+                Host = host,
+                Session = host.CreateSession()
+            };
+
+            contextTemplate.Session.Add("RazorPageClassName", "ClassName");
+            contextTemplate.Session.Add("Namespace", "TestNamespace");
 
             string generatedCode = string.Empty;
-            if (File.Exists(contextTemplate))
+            if (contextTemplate != null)
             {
-                host.TemplateFile = contextTemplate;
-                host.Initialize();
-                host.Session.Add("Namespace", "TestNamespace");
-                host.Session.Add("RazorPageClassName", "TestClass");
-                CompiledTemplate compiledEntityTypeTemplate = null;
+                contextTemplate.Initialize();
                 //generatedCode = new TemplatingEngine().ProcessTemplate(File.ReadAllText(contextTemplate), host);
                 //CheckEncoding(host.OutputEncoding);
                 //HandleErrors(host);
-                compiledEntityTypeTemplate = new TemplatingEngine().CompileTemplate(File.ReadAllText(contextTemplate), host);
-                generatedCode = compiledEntityTypeTemplate.Process();
+
+                //CompiledTemplate compiledEntityTypeTemplate = new TemplatingEngine().CompileTemplate(File.ReadAllText(host.TemplateFile), host);
+                //generatedCode = compiledEntityTypeTemplate.Process();
+                generatedCode = ProcessTemplate(contextTemplate);
             }
             return generatedCode;
+        }
+
+        private string ProcessTemplate(ITextTransformation transformation)
+        {
+            var output = transformation.TransformText();
+
+            foreach (CompilerError error in transformation.Errors)
+            {
+                //_reporter.Write(error);
+            }
+
+            if (transformation.Errors.HasErrors)
+            {
+                //throw new OperationException(DesignStrings.ErrorGeneratingOutput(transformation.GetType().Name));
+            }
+
+            return output;
         }
 
     }

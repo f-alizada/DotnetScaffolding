@@ -17,7 +17,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
     /// Class to produce the template output
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public partial class RazorPageEmptyGenerator : RazorPageEmptyGeneratorBase
+    public partial class ApiEmptyControllerGenerator : ApiEmptyControllerGeneratorBase, ITextTransformation
     {
         /// <summary>
         /// Create the template output
@@ -27,15 +27,14 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
 
     var usings = new List<string>
     {
-        "Microsoft.AspNetCore.Mvc.RazorPages"
+        "Microsoft.AspNetCore.Mvc"
     };
 
             this.Write("namespace ");
             this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
-            this.Write("\r\n{\r\n    public class ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(RazorPageClassName));
-            this.Write(" : PageModel\r\n    {\r\n        public void OnGet()\r\n        {\r\n        }\r\n    }\r\n}\r" +
-                    "\n\r\n");
+            this.Write("\r\n{\r\n    [Route(\"api/[controller]\")]\r\n    [ApiController]\r\n    public class ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ControllerName));
+            this.Write(" : ControllerBase\r\n    {\r\n    }\r\n}\r\n");
 
     StringBuilder mainEnvironment = GenerationEnvironment;
     GenerationEnvironment = new StringBuilder();
@@ -71,16 +70,16 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
             }
         }
 
-private string _RazorPageClassNameField;
+private string _ControllerNameField;
 
 /// <summary>
-/// Access the RazorPageClassName parameter of the template.
+/// Access the ControllerName parameter of the template.
 /// </summary>
-private string RazorPageClassName
+private string ControllerName
 {
     get
     {
-        return this._RazorPageClassNameField;
+        return this._ControllerNameField;
     }
 }
 
@@ -105,37 +104,37 @@ public virtual void Initialize()
 {
     if ((this.Errors.HasErrors == false))
     {
-bool RazorPageClassNameValueAcquired = false;
-if (this.Session.ContainsKey("RazorPageClassName"))
+bool ControllerNameValueAcquired = false;
+if (this.Session.ContainsKey("ControllerName"))
 {
-    this._RazorPageClassNameField = ((string)(this.Session["RazorPageClassName"]));
-    RazorPageClassNameValueAcquired = true;
+    this._ControllerNameField = ((string)(this.Session["ControllerName"]));
+    ControllerNameValueAcquired = true;
 }
-if ((RazorPageClassNameValueAcquired == false))
+if ((ControllerNameValueAcquired == false))
 {
-    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "RazorPageClassName");
+    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "ControllerName");
     if ((string.IsNullOrEmpty(parameterValue) == false))
     {
         global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(string));
         if (((tc != null) 
                     && tc.CanConvertFrom(typeof(string))))
         {
-            this._RazorPageClassNameField = ((string)(tc.ConvertFrom(parameterValue)));
-            RazorPageClassNameValueAcquired = true;
+            this._ControllerNameField = ((string)(tc.ConvertFrom(parameterValue)));
+            ControllerNameValueAcquired = true;
         }
         else
         {
-            this.Error("The type \'System.String\' of the parameter \'RazorPageClassName\' did not match the " +
-                    "type of the data passed to the template.");
+            this.Error("The type \'System.String\' of the parameter \'ControllerName\' did not match the type" +
+                    " of the data passed to the template.");
         }
     }
 }
-if ((RazorPageClassNameValueAcquired == false))
+if ((ControllerNameValueAcquired == false))
 {
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("RazorPageClassName");
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("ControllerName");
     if ((data != null))
     {
-        this._RazorPageClassNameField = ((string)(data));
+        this._ControllerNameField = ((string)(data));
     }
 }
 bool NamespaceValueAcquired = false;
@@ -183,7 +182,7 @@ if ((NamespaceValueAcquired == false))
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public class RazorPageEmptyGeneratorBase
+    public class ApiEmptyControllerGeneratorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

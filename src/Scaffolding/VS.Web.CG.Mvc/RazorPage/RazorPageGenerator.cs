@@ -42,7 +42,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
 
         public async Task GenerateCode(RazorPageGeneratorModel razorPageGeneratorModel)
         {
-            System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Launch();
             await Task.Delay(0);
             if (razorPageGeneratorModel == null)
             {

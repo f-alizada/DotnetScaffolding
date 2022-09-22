@@ -1,24 +1,22 @@
 <#@ template hostSpecific="true" linePragmas="false" #>
-<#@ parameter type="System.String" name="RazorPageClassName" #>
+<#@ parameter type="System.String" name="ControllerName" #>
 <#@ parameter type="System.String" name="Namespace" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Text" #>
 <#
     var usings = new List<string>
     {
-        "Microsoft.AspNetCore.Mvc.RazorPages"
+        "Microsoft.AspNetCore.Mvc"
     };
 #>
 namespace <#= Namespace #>
 {
-    public class <#= RazorPageClassName #> : PageModel
+    [Route("api/[controller]")]
+    [ApiController]
+    public class <#= ControllerName #> : ControllerBase
     {
-        public void OnGet()
-        {
-        }
     }
 }
-
 <#
     StringBuilder mainEnvironment = GenerationEnvironment;
     GenerationEnvironment = new StringBuilder();

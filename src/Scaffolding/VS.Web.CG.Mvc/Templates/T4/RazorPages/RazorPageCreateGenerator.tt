@@ -6,6 +6,8 @@
 <#
     var usings = new List<string>
     {
+        "System",
+        "System.Collections.Generic",
         "Microsoft.AspNetCore.Mvc.RazorPages"
     };
 #>
