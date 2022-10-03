@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View
 {
@@ -64,25 +65,37 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View
         public async Task GenerateCode(ViewGeneratorModel viewGeneratorModel)
         {
             var viewTemplate = ValidateViewGeneratorModel(viewGeneratorModel);
-
-            ViewScaffolderBase scaffolder = null;
-            if (viewTemplate.Name == ViewTemplate.EmptyViewTemplate.Name)
+            if (viewGeneratorModel.T4Templating)
             {
-                scaffolder = ActivatorUtilities.CreateInstance<EmptyViewScaffolder>(_serviceProvider);
+                await GenerateCodeT4(viewGeneratorModel);
             }
-            else if (string.IsNullOrEmpty(viewGeneratorModel.DataContextClass))
-            {
-                scaffolder = ActivatorUtilities.CreateInstance<ModelBasedViewScaffolder>(_serviceProvider);
-            }
+            //older razor templating
             else
             {
-                scaffolder = ActivatorUtilities.CreateInstance<EFModelBasedViewScaffolder>(_serviceProvider);
-            }
+                ViewScaffolderBase scaffolder;
+                if (viewTemplate.Name == ViewTemplate.EmptyViewTemplate.Name)
+                {
+                    scaffolder = ActivatorUtilities.CreateInstance<EmptyViewScaffolder>(_serviceProvider);
+                }
+                else if (string.IsNullOrEmpty(viewGeneratorModel.DataContextClass))
+                {
+                    scaffolder = ActivatorUtilities.CreateInstance<ModelBasedViewScaffolder>(_serviceProvider);
+                }
+                else
+                {
+                    scaffolder = ActivatorUtilities.CreateInstance<EFModelBasedViewScaffolder>(_serviceProvider);
+                }
 
-            if (scaffolder != null)
-            {
-                await scaffolder.GenerateCode(viewGeneratorModel);
+                if (scaffolder != null)
+                {
+                    await scaffolder.GenerateCode(viewGeneratorModel);
+                }
             }
+        }
+
+        private Task GenerateCodeT4(ViewGeneratorModel viewGeneratorModel)
+        {
+            throw new NotImplementedException(string.Format(MessageStrings.T4TemplatingNotSupported, nameof(View)));
         }
 
         private static ViewTemplate ValidateViewGeneratorModel(ViewGeneratorModel viewGeneratorModel)

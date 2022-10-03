@@ -1,6 +1,5 @@
 <#@ template hostSpecific="true" linePragmas="false" #>
-<#@ parameter type="System.String" name="RazorPageClassName" #>
-<#@ parameter type="System.String" name="Namespace" #>
+<#@ parameter type="Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel" name="RazorPageModel" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Text" #>
 <#
@@ -9,9 +8,9 @@
         "Microsoft.AspNetCore.Mvc.RazorPages"
     };
 #>
-namespace <#= Namespace #>
+namespace <#= RazorPageModel.NamespaceName #>
 {
-    public class <#= RazorPageClassName #> : PageModel
+    public class <#= RazorPageModel.RazorPageName #> : PageModel
     {
         public void OnGet()
         {

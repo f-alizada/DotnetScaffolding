@@ -36,6 +36,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
         [Option(Name = "controllerNamespace", ShortName = "namespace", Description = "Specify the name of the namespace to use for the generated controller")]
         public string ControllerNamespace { get; set; }
 
+        [Option(Name = "T4", ShortName = "t4", Description = "Use this option for opting into T4 templating.")]
+        public bool T4Templating { get; set; } = false;
+
         public abstract CommonCommandLineModel Clone();
 
         protected CommonCommandLineModel()

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller
 {
@@ -16,12 +17,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller
 
         public CommandLineGenerator(IServiceProvider serviceProvider)
         {
-            if (serviceProvider == null)
-            {
-                throw new ArgumentNullException(nameof(serviceProvider));
-            }
-
-            _serviceProvider = serviceProvider;
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         public async Task GenerateCode(CommandLineGeneratorModel model)
@@ -31,28 +27,40 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller
                 throw new ArgumentNullException(nameof(model));
             }
 
-            ControllerGeneratorBase generator = null;
-
-            if (string.IsNullOrEmpty(model.ModelClass))
+            if (model.T4Templating)
             {
-                if (model.GenerateReadWriteActions)
+                await GenerateCodeT4(model);
+            }
+            //older razor templating
+            else
+            {
+                ControllerGeneratorBase generator;
+                if (string.IsNullOrEmpty(model.ModelClass))
                 {
-                    generator = GetGenerator<MvcControllerWithReadWriteActionGenerator>();
+                    if (model.GenerateReadWriteActions)
+                    {
+                        generator = GetGenerator<MvcControllerWithReadWriteActionGenerator>();
+                    }
+                    else
+                    {
+                        generator = GetGenerator<MvcControllerEmpty>(); //This need to handle the WebAPI Empty as well...
+                    }
                 }
                 else
                 {
-                    generator = GetGenerator<MvcControllerEmpty>(); //This need to handle the WebAPI Empty as well...
+                    generator = GetGenerator<ControllerWithContextGenerator>();
+                }
+
+                if (generator != null)
+                {
+                    await generator.Generate(model);
                 }
             }
-            else
-            {
-                generator = GetGenerator<ControllerWithContextGenerator>();
-            }
+        }
 
-            if (generator != null)
-            {
-                await generator.Generate(model);
-            }
+        private Task GenerateCodeT4(CommandLineGeneratorModel model)
+        {
+            throw new NotImplementedException(string.Format(MessageStrings.T4TemplatingNotSupported, nameof(MvcController)));
         }
 
         private ControllerGeneratorBase GetGenerator<TChild>() where TChild : ControllerGeneratorBase

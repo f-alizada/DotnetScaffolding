@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.DotNet.Scaffolding.Shared;
@@ -11,8 +12,7 @@ using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating;
-using Microsoft.VisualStudio.Web.CodeGeneration.Templating;
-using Microsoft.Extensions.DependencyModel;
+using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
 {
@@ -22,12 +22,14 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger _logger;
         private readonly IFileSystem _fileSystem;
+        private readonly IProjectContext _projectContext;
 
         public RazorPageGenerator(
             IApplicationInfo applicationInfo,
             IServiceProvider serviceProvider,
             ILogger logger,
-            IFileSystem fileSystem)
+            IFileSystem fileSystem,
+            IProjectContext projectContext)
             : base(applicationInfo)
         {
             if (applicationInfo == null)
@@ -38,57 +40,71 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+            _projectContext = projectContext ?? throw new ArgumentNullException(nameof(projectContext));
         }
 
         public async Task GenerateCode(RazorPageGeneratorModel razorPageGeneratorModel)
         {
-            //System.Diagnostics.Debugger.Launch();
-            await Task.Delay(0);
             if (razorPageGeneratorModel == null)
             {
                 throw new ArgumentNullException(nameof(razorPageGeneratorModel));
             }
 
-            if (string.IsNullOrEmpty(razorPageGeneratorModel.ModelClass))
+            if (razorPageGeneratorModel.T4Templating)
             {
-                if (string.IsNullOrEmpty(razorPageGeneratorModel.RazorPageName))
-                {
-                    throw new ArgumentException(MessageStrings.RazorPageNameRequired);
-                }
-
-                if (string.IsNullOrEmpty(razorPageGeneratorModel.TemplateName))
-                {
-                    throw new ArgumentException(MessageStrings.TemplateNameRequired);
-                }
-                TemplateInvoker ti = new TemplateInvoker(_serviceProvider);
-                //var templateModel = GetRazorPageViewGeneratorTemplateModel(razorPageGeneratorModel);
-                var dictParams = new Dictionary<string, object>()
-                {
-                    { "RazorPageClassName" , "ClassName" },
-                    { "Namespace", "TestNamespace" }
-                };
-                var cc = DependencyContext.Default?.CompileLibraries;
-                var rr = DependencyContext.Default?.RuntimeLibraries;
-                var result = ti.InvokeTemplate(@"D:\Stuff\scaffolding\src\Scaffolding\VS.Web.CG.Mvc\Templates\T4\RazorPages\RazorPage_Empty.tt", dictParams);
-                var outputPath = ValidateAndGetOutputPath(razorPageGeneratorModel, outputFileName: razorPageGeneratorModel.RazorPageName + Constants.CodeFileExtension);
-                //var text = result.GeneratedText;
-                using (var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(result)))
-                {
-                    await AddFileHelper(outputPath, sourceStream);
-                }
+                await GenerateCodeT4(razorPageGeneratorModel);
             }
+            //older razor templating.
             else
             {
-                EFModelBasedRazorPageScaffolder scaffolder = ActivatorUtilities.CreateInstance<EFModelBasedRazorPageScaffolder>(_serviceProvider);
+                if (string.IsNullOrEmpty(razorPageGeneratorModel.ModelClass))
+                {
+                    if (string.IsNullOrEmpty(razorPageGeneratorModel.RazorPageName))
+                    {
+                        throw new ArgumentException(MessageStrings.RazorPageNameRequired);
+                    }
 
-                if (!string.IsNullOrEmpty(razorPageGeneratorModel.TemplateName) && !string.IsNullOrEmpty(razorPageGeneratorModel.RazorPageName))
-                {   // Razor page using EF
+                    if (string.IsNullOrEmpty(razorPageGeneratorModel.TemplateName))
+                    {
+                        throw new ArgumentException(MessageStrings.TemplateNameRequired);
+                    }
+                    RazorPageScaffolderBase scaffolder = ActivatorUtilities.CreateInstance<EmptyRazorPageScaffolder>(_serviceProvider);
                     await scaffolder.GenerateCode(razorPageGeneratorModel);
                 }
                 else
-                {   // Razor page CRUD using EF
-                    await scaffolder.GenerateViews(razorPageGeneratorModel);
+                {
+                    EFModelBasedRazorPageScaffolder scaffolder = ActivatorUtilities.CreateInstance<EFModelBasedRazorPageScaffolder>(_serviceProvider);
+
+                    if (!string.IsNullOrEmpty(razorPageGeneratorModel.TemplateName) && !string.IsNullOrEmpty(razorPageGeneratorModel.RazorPageName))
+                    {   // Razor page using EF
+                        await scaffolder.GenerateCode(razorPageGeneratorModel);
+                    }
+                    else
+                    {   // Razor page CRUD using EF
+                        await scaffolder.GenerateViews(razorPageGeneratorModel);
+                    }
                 }
+            }    
+        }
+
+        private async Task GenerateCodeT4(RazorPageGeneratorModel razorPageGeneratorModel)
+        {
+            var razorPageTemplates = T4TemplateFinder.GetAllRazorPagesT4(ApplicationInfo.ApplicationBasePath, _projectContext);
+            razorPageGeneratorModel.NamespaceName = string.IsNullOrEmpty(razorPageGeneratorModel.NamespaceName)
+               ? NameSpaceUtilities.GetSafeNameSpaceFromPath(razorPageGeneratorModel.RelativeFolderPath, _projectContext.RootNamespace)
+               : razorPageGeneratorModel.NamespaceName;
+
+            TemplateInvoker templateInvoker = new TemplateInvoker(_serviceProvider);
+            var dictParams = new Dictionary<string, object>()
+            {
+                { "RazorPageModel" , razorPageGeneratorModel }
+            };
+
+            var result = templateInvoker.InvokeTemplate(@"D:\Stuff\scaffolding\src\Scaffolding\VS.Web.CG.Mvc\Templates\T4\RazorPages\RazorPageEmptyGenerator.tt", dictParams);
+            var outputPath = ValidateAndGetOutputPath(razorPageGeneratorModel, outputFileName: razorPageGeneratorModel.RazorPageName + Constants.CodeFileExtension);
+            using (var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(result)))
+            {
+                await AddFileHelper(outputPath, sourceStream);
             }
         }
 

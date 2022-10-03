@@ -19,6 +19,7 @@ using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity;
 using ConsoleLogger = Microsoft.DotNet.MSIdentity.Shared.ConsoleLogger;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
@@ -98,29 +99,37 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
             var endpointsModel = ModelTypesLocator.GetAllTypes().FirstOrDefault(t => t.Name.Equals(model.EndpintsClassName));
             var endpointsFilePath = endpointsModel?.TypeSymbol?.Locations.FirstOrDefault()?.SourceTree?.FilePath ?? ValidateAndGetOutputPath(model);
 
-            //endpoints file exists, use CodeAnalysis to add required clauses.
-            if (FileSystem.FileExists(endpointsFilePath))
+            if (model.T4Templating)
             {
-                //get method block with the api endpoints.
-                string membersBlockText = await CodeGeneratorActionsService.ExecuteTemplate(GetTemplateName(model, existingEndpointsFile: true), TemplateFolders, templateModel);
-                var className = model.EndpintsClassName;
-                await AddEndpointsMethod(membersBlockText, endpointsFilePath, className, templateModel);
-
-                if (modelTypeAndContextModel?.ContextProcessingResult?.ContextProcessingStatus == ContextProcessingStatus.ContextAddedButRequiresConfig)
-                {
-                    throw new Exception(string.Format("{0} {1}", MessageStrings.ScaffoldingSuccessful_unregistered,
-                        MessageStrings.Scaffolding_additionalSteps));
-                }
+                await GenerateCodeT4(model);
             }
-            //execute CodeGeneratorActionsService.AddFileFromTemplateAsync to add endpoints file.
-            else 
+            //older razor templating
+            else
             {
-                //Add endpoints file with endpoints class since it does not exist.
-                ValidateModel(model);
-                await CodeGeneratorActionsService.AddFileFromTemplateAsync(endpointsFilePath, GetTemplateName(model, existingEndpointsFile: false), TemplateFolders, templateModel);
-                Logger.LogMessage(string.Format(MessageStrings.AddedController, endpointsFilePath.Substring(AppInfo.ApplicationBasePath.Length)));
-                //add app.Map statement to Program.cs
-                await ModifyProgramCs(templateModel);
+                //endpoints file exists, use CodeAnalysis to add required clauses.
+                if (FileSystem.FileExists(endpointsFilePath))
+                {
+                    //get method block with the api endpoints.
+                    string membersBlockText = await CodeGeneratorActionsService.ExecuteTemplate(GetTemplateName(model, existingEndpointsFile: true), TemplateFolders, templateModel);
+                    var className = model.EndpintsClassName;
+                    await AddEndpointsMethod(membersBlockText, endpointsFilePath, className, templateModel);
+
+                    if (modelTypeAndContextModel?.ContextProcessingResult?.ContextProcessingStatus == ContextProcessingStatus.ContextAddedButRequiresConfig)
+                    {
+                        throw new Exception(string.Format("{0} {1}", MessageStrings.ScaffoldingSuccessful_unregistered,
+                            MessageStrings.Scaffolding_additionalSteps));
+                    }
+                }
+                //execute CodeGeneratorActionsService.AddFileFromTemplateAsync to add endpoints file.
+                else
+                {
+                    //Add endpoints file with endpoints class since it does not exist.
+                    ValidateModel(model);
+                    await CodeGeneratorActionsService.AddFileFromTemplateAsync(endpointsFilePath, GetTemplateName(model, existingEndpointsFile: false), TemplateFolders, templateModel);
+                    Logger.LogMessage(string.Format(MessageStrings.AddedController, endpointsFilePath.Substring(AppInfo.ApplicationBasePath.Length)));
+                    //add app.Map statement to Program.cs
+                    await ModifyProgramCs(templateModel);
+                }
             }
         }
 
@@ -383,7 +392,12 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
                     string.Format(MessageStrings.InstallPackagesForScaffoldingIdentity, string.Join(",", missingPackages)));
             }
         }
-        
+
+        private Task GenerateCodeT4(MinimalApiGeneratorCommandLineModel viewGeneratorModel)
+        {
+            throw new NotImplementedException(string.Format(MessageStrings.T4TemplatingNotSupported, nameof(MinimalApi)));
+        }
+
         private string GetMinimalApiCodeModifierConfig()
         {
             string jsonText = string.Empty;

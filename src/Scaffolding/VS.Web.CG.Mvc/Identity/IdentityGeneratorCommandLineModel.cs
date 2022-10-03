@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
+using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
 {
@@ -39,6 +39,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
 
         [Option(Name ="excludeFiles", ShortName="exf", Description = "Use this option to overwrite all but list of semicolon separated files.  Use the --listFiles option to see the available options.")]
         public string ExcludeFiles { get; set; }
+
+        [Option(Name = "T4", ShortName = "t4", Description = "Use this option for opting into T4 templating.")]
+        public bool T4Templating { get; set; } = false;
 
         public bool IsGenerateCustomUser
         {

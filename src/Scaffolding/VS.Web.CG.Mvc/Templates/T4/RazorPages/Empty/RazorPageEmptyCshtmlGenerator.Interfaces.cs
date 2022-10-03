@@ -3,7 +3,7 @@
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
 {
-    partial class ApiEmptyControllerGenerator : ITextTransformation
+    partial class RazorPageEmptyCshtmlGenerator : ITextTransformation
     {
     }
 }

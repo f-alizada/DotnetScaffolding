@@ -58,10 +58,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
                 throw new ArgumentNullException(nameof(templateParameters));
             }
 
-            System.Diagnostics.Debugger.Launch();
             var host = new TextTemplatingEngineHost(_serviceProvider)
             {
-                TemplateFile = "D:\\Stuff\\scaffolding\\src\\Scaffolding\\VS.Web.CG.Mvc\\Templates\\T4\\RazorPages\\RazorPageEmptyGenerator.tt"
+                TemplateFile = templatePath
             };
 
             var contextTemplate = new RazorPageEmptyGenerator
@@ -70,8 +69,10 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
                 Session = host.CreateSession()
             };
 
-            contextTemplate.Session.Add("RazorPageClassName", "ClassName");
-            contextTemplate.Session.Add("Namespace", "TestNamespace");
+            foreach (var param in templateParameters)
+            {
+                contextTemplate.Session.Add(param.Key, param.Value);
+            }
 
             string generatedCode = string.Empty;
             if (contextTemplate != null)

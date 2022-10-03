@@ -1,0 +1,8 @@
+<#@ template hostSpecific="true" linePragmas="false" #>
+<#@ parameter type="Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel" name="RazorPageModel" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text" #>
+@page
+@model <#= RazorPageModel.NamespaceName #>.<#= RazorPageModel.RazorPageName #>
+@{
+}

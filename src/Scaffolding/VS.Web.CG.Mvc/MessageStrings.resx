@@ -258,4 +258,7 @@
   <data name="InvalidClassName" xml:space="preserve">
     <value>The class name '{0}' is not valid.</value>
   </data>
+  <data name="T4TemplatingNotSupported" xml:space="preserve">
+    <value>T4 templating is not supported for the {0} scaffolder.</value>
+  </data>
 </root>

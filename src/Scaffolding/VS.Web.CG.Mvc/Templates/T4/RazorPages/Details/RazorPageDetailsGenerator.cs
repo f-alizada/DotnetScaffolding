@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
+namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.RazorPages.Details
 {
     using System.Collections.Generic;
     using System.Text;
@@ -17,7 +17,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
     /// Class to produce the template output
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public partial class RazorPageEmptyGenerator : RazorPageEmptyGeneratorBase
+    public partial class RazorPageDetailsGenerator : RazorPageDetailsGeneratorBase
     {
         /// <summary>
         /// Create the template output
@@ -31,9 +31,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
     };
 
             this.Write("namespace ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
+            this.Write(this.ToStringHelper.ToStringWithCulture(RazorPageModel.NamespaceName));
             this.Write("\r\n{\r\n    public class ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(RazorPageClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(RazorPageModel.RazorPageName));
             this.Write(" : PageModel\r\n    {\r\n        public void OnGet()\r\n        {\r\n        }\r\n    }\r\n}\r" +
                     "\n\r\n");
 
@@ -71,29 +71,16 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
             }
         }
 
-private string _RazorPageClassNameField;
+private global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel _RazorPageModelField;
 
 /// <summary>
-/// Access the RazorPageClassName parameter of the template.
+/// Access the RazorPageModel parameter of the template.
 /// </summary>
-private string RazorPageClassName
+private global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel RazorPageModel
 {
     get
     {
-        return this._RazorPageClassNameField;
-    }
-}
-
-private string _NamespaceField;
-
-/// <summary>
-/// Access the Namespace parameter of the template.
-/// </summary>
-private string Namespace
-{
-    get
-    {
-        return this._NamespaceField;
+        return this._RazorPageModelField;
     }
 }
 
@@ -105,70 +92,38 @@ public virtual void Initialize()
 {
     if ((this.Errors.HasErrors == false))
     {
-bool RazorPageClassNameValueAcquired = false;
-if (this.Session.ContainsKey("RazorPageClassName"))
+bool RazorPageModelValueAcquired = false;
+if (this.Session.ContainsKey("RazorPageModel"))
 {
-    this._RazorPageClassNameField = ((string)(this.Session["RazorPageClassName"]));
-    RazorPageClassNameValueAcquired = true;
+    this._RazorPageModelField = ((global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel)(this.Session["RazorPageModel"]));
+    RazorPageModelValueAcquired = true;
 }
-if ((RazorPageClassNameValueAcquired == false))
+if ((RazorPageModelValueAcquired == false))
 {
-    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "RazorPageClassName");
+    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "RazorPageModel");
     if ((string.IsNullOrEmpty(parameterValue) == false))
     {
-        global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(string));
+        global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel));
         if (((tc != null) 
                     && tc.CanConvertFrom(typeof(string))))
         {
-            this._RazorPageClassNameField = ((string)(tc.ConvertFrom(parameterValue)));
-            RazorPageClassNameValueAcquired = true;
+            this._RazorPageModelField = ((global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel)(tc.ConvertFrom(parameterValue)));
+            RazorPageModelValueAcquired = true;
         }
         else
         {
-            this.Error("The type \'System.String\' of the parameter \'RazorPageClassName\' did not match the " +
-                    "type of the data passed to the template.");
+            this.Error("The type \'Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorM" +
+                    "odel\' of the parameter \'RazorPageModel\' did not match the type of the data passe" +
+                    "d to the template.");
         }
     }
 }
-if ((RazorPageClassNameValueAcquired == false))
+if ((RazorPageModelValueAcquired == false))
 {
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("RazorPageClassName");
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("RazorPageModel");
     if ((data != null))
     {
-        this._RazorPageClassNameField = ((string)(data));
-    }
-}
-bool NamespaceValueAcquired = false;
-if (this.Session.ContainsKey("Namespace"))
-{
-    this._NamespaceField = ((string)(this.Session["Namespace"]));
-    NamespaceValueAcquired = true;
-}
-if ((NamespaceValueAcquired == false))
-{
-    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "Namespace");
-    if ((string.IsNullOrEmpty(parameterValue) == false))
-    {
-        global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(string));
-        if (((tc != null) 
-                    && tc.CanConvertFrom(typeof(string))))
-        {
-            this._NamespaceField = ((string)(tc.ConvertFrom(parameterValue)));
-            NamespaceValueAcquired = true;
-        }
-        else
-        {
-            this.Error("The type \'System.String\' of the parameter \'Namespace\' did not match the type of t" +
-                    "he data passed to the template.");
-        }
-    }
-}
-if ((NamespaceValueAcquired == false))
-{
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("Namespace");
-    if ((data != null))
-    {
-        this._NamespaceField = ((string)(data));
+        this._RazorPageModelField = ((global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel)(data));
     }
 }
 
@@ -183,7 +138,7 @@ if ((NamespaceValueAcquired == false))
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public class RazorPageEmptyGeneratorBase
+    public class RazorPageDetailsGeneratorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

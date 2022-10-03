@@ -25,6 +25,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
         [Option(Name = "useSqlite", ShortName = "sqlite", Description = "Flag to specify if DbContext should use SQLite instead of SQL Server.")]
         public bool UseSqlite { get; set; }
 
+        [Option(Name = "T4", ShortName = "t4", Description = "Use this option for opting into T4 templating.")]
+        public bool T4Templating { get; set; } = false;
+
         public MinimalApiGeneratorCommandLineModel()
         {
         }

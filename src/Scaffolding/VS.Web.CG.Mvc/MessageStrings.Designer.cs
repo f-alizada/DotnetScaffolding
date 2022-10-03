@@ -421,6 +421,15 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to T4 templating is not supported for the {0} scaffolder..
+        /// </summary>
+        internal static string T4TemplatingNotSupported {
+            get {
+                return ResourceManager.GetString("T4TemplatingNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The TemplateName cannot be empty.
         /// </summary>
         internal static string TemplateNameRequired {

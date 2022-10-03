@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.Api
+namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
 {
     using System.Collections.Generic;
     using System.Text;
@@ -17,7 +17,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.Api
     /// Class to produce the template output
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public partial class ApiActionsControllerGenerator : ApiActionsControllerGeneratorBase
+    public partial class RazorPageCreateGenerator : RazorPageCreateGeneratorBase
     {
         /// <summary>
         /// Create the template output
@@ -27,31 +27,32 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.Api
 
     var usings = new List<string>
     {
-        "Microsoft.AspNetCore.Mvc"
+        "Microsoft.AspNetCore.Mvc.RazorPages"
     };
 
-            this.Write("// For more information on enabling Web API for empty projects, visit https://go." +
-                    "microsoft.com/fwlink/?LinkID=397860\r\n\r\nnamespace ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
-            this.Write("\r\n{\r\n    [Route(\"api/[controller]\")]\r\n    [ApiController]\r\n    public class ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(ControllerName));
-            this.Write(" : ControllerBase\r\n    {\r\n        // GET: api/<");
-            this.Write(this.ToStringHelper.ToStringWithCulture(ControllerName));
-            this.Write(">\r\n        [HttpGet]\r\n        public IEnumerable<string> Get()\r\n        {\r\n      " +
-                    "      return new string[] { \"value1\", \"value2\" };\r\n        }\r\n\r\n        // GET a" +
-                    "pi/<");
-            this.Write(this.ToStringHelper.ToStringWithCulture(ControllerName));
-            this.Write(">/5\r\n        [HttpGet(\"{id}\")]\r\n        public string Get(int id)\r\n        {\r\n   " +
-                    "         return \"value\";\r\n        }\r\n\r\n        // POST api/<");
-            this.Write(this.ToStringHelper.ToStringWithCulture(ControllerName));
-            this.Write(">\r\n        [HttpPost]\r\n        public void Post([FromBody] string value)\r\n       " +
-                    " {\r\n        }\r\n\r\n        // PUT api/<");
-            this.Write(this.ToStringHelper.ToStringWithCulture(ControllerName));
-            this.Write(">/5\r\n        [HttpPut(\"{id}\")]\r\n        public void Put(int id, [FromBody] string" +
-                    " value)\r\n        {\r\n        }\r\n\r\n        // DELETE api/<");
-            this.Write(this.ToStringHelper.ToStringWithCulture(ControllerName));
-            this.Write(">/5\r\n        [HttpDelete(\"{id}\")]\r\n        public void Delete(int id)\r\n        {\r" +
-                    "\n        }\r\n    }\r\n}\r\n");
+            this.Write("namespace ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(RazorPageModel.NamespaceName));
+            this.Write("\r\n{\r\n    public class ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(RazorPageModel.RazorPageName));
+            this.Write(" : PageModel\r\n    {\r\n        public void OnGet()\r\n        {\r\n        }\r\n    }\r\n}\r" +
+                    "\n\r\n");
+
+    StringBuilder mainEnvironment = GenerationEnvironment;
+    GenerationEnvironment = new StringBuilder();
+
+    foreach (var ns in usings)
+    {
+
+            this.Write("using ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ns));
+            this.Write(";\r\n");
+
+    }
+
+    WriteLine("");
+
+    GenerationEnvironment.Append(mainEnvironment);
+
             return this.GenerationEnvironment.ToString();
         }
         private global::Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost hostValue;
@@ -70,29 +71,16 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.Api
             }
         }
 
-private string _ControllerNameField;
+private global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel _RazorPageModelField;
 
 /// <summary>
-/// Access the ControllerName parameter of the template.
+/// Access the RazorPageModel parameter of the template.
 /// </summary>
-private string ControllerName
+private global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel RazorPageModel
 {
     get
     {
-        return this._ControllerNameField;
-    }
-}
-
-private string _NamespaceField;
-
-/// <summary>
-/// Access the Namespace parameter of the template.
-/// </summary>
-private string Namespace
-{
-    get
-    {
-        return this._NamespaceField;
+        return this._RazorPageModelField;
     }
 }
 
@@ -104,70 +92,38 @@ public virtual void Initialize()
 {
     if ((this.Errors.HasErrors == false))
     {
-bool ControllerNameValueAcquired = false;
-if (this.Session.ContainsKey("ControllerName"))
+bool RazorPageModelValueAcquired = false;
+if (this.Session.ContainsKey("RazorPageModel"))
 {
-    this._ControllerNameField = ((string)(this.Session["ControllerName"]));
-    ControllerNameValueAcquired = true;
+    this._RazorPageModelField = ((global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel)(this.Session["RazorPageModel"]));
+    RazorPageModelValueAcquired = true;
 }
-if ((ControllerNameValueAcquired == false))
+if ((RazorPageModelValueAcquired == false))
 {
-    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "ControllerName");
+    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "RazorPageModel");
     if ((string.IsNullOrEmpty(parameterValue) == false))
     {
-        global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(string));
+        global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel));
         if (((tc != null) 
                     && tc.CanConvertFrom(typeof(string))))
         {
-            this._ControllerNameField = ((string)(tc.ConvertFrom(parameterValue)));
-            ControllerNameValueAcquired = true;
+            this._RazorPageModelField = ((global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel)(tc.ConvertFrom(parameterValue)));
+            RazorPageModelValueAcquired = true;
         }
         else
         {
-            this.Error("The type \'System.String\' of the parameter \'ControllerName\' did not match the type" +
-                    " of the data passed to the template.");
+            this.Error("The type \'Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorM" +
+                    "odel\' of the parameter \'RazorPageModel\' did not match the type of the data passe" +
+                    "d to the template.");
         }
     }
 }
-if ((ControllerNameValueAcquired == false))
+if ((RazorPageModelValueAcquired == false))
 {
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("ControllerName");
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("RazorPageModel");
     if ((data != null))
     {
-        this._ControllerNameField = ((string)(data));
-    }
-}
-bool NamespaceValueAcquired = false;
-if (this.Session.ContainsKey("Namespace"))
-{
-    this._NamespaceField = ((string)(this.Session["Namespace"]));
-    NamespaceValueAcquired = true;
-}
-if ((NamespaceValueAcquired == false))
-{
-    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "Namespace");
-    if ((string.IsNullOrEmpty(parameterValue) == false))
-    {
-        global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(string));
-        if (((tc != null) 
-                    && tc.CanConvertFrom(typeof(string))))
-        {
-            this._NamespaceField = ((string)(tc.ConvertFrom(parameterValue)));
-            NamespaceValueAcquired = true;
-        }
-        else
-        {
-            this.Error("The type \'System.String\' of the parameter \'Namespace\' did not match the type of t" +
-                    "he data passed to the template.");
-        }
-    }
-}
-if ((NamespaceValueAcquired == false))
-{
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("Namespace");
-    if ((data != null))
-    {
-        this._NamespaceField = ((string)(data));
+        this._RazorPageModelField = ((global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel)(data));
     }
 }
 
@@ -182,7 +138,7 @@ if ((NamespaceValueAcquired == false))
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public class ApiActionsControllerGeneratorBase
+    public class RazorPageCreateGeneratorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

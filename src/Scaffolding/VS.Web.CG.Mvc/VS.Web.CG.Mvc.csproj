@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Code Generators for ASP.NET Core MVC. Contains code generators for MVC Controllers and Views.</Description>
@@ -127,17 +127,73 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>IdentityDbContextGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Templates\T4\RazorPages\RazorPageCreateGenerator.cs">
+    <Compile Include="Templates\T4\RazorPages\Create\RazorPageCreateGenerator.cs">
       <DependentUpon>RazorPageCreateGenerator.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Templates\T4\RazorPages\RazorPageEmptyGenerator.Interfaces.cs" />
-    <Compile Include="Templates\T4\RazorPages\RazorPageEmptyGenerator.cs">
+    <Compile Include="Templates\T4\RazorPages\Create\RazorPageCreateCshtmlGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RazorPageCreateCshtmlGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\Create\RazorPageCreateGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\RazorPages\Delete\RazorPageDeleteCshtmlGenerator.cs">
+      <DependentUpon>RazorPageDeleteCshtmlGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\Delete\RazorPageDeleteGenerator.cs">
+      <DependentUpon>RazorPageDeleteGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\Delete\RazorPageDeleteGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\RazorPages\Details\RazorPageDetailsCshtmlGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RazorPageDetailsCshtmlGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\Details\RazorPageDetailsGenerator.cs">
+      <DependentUpon>RazorPageDetailsGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\Details\RazorPageDetailsGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\RazorPages\Edit\RazorPageEditCshtmlGenerator.cs">
+      <DependentUpon>RazorPageEditCshtmlGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\Edit\RazorPageEditGenerator.cs">
+      <DependentUpon>RazorPageEditGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\Edit\RazorPageEditGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\RazorPages\Empty\RazorPageEmptyCshtmlGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RazorPageEmptyCshtmlGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\Empty\RazorPageEmptyCshtmlGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\RazorPages\Empty\RazorPageEmptyGenerator.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>RazorPageEmptyGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="Templates\T4\RazorPages\Empty\RazorPageEmptyGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\RazorPages\List\RazorPageListCshtmlGenerator.cs">
+      <DependentUpon>RazorPageListCshtmlGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\List\RazorPageListGenerator.cs">
+      <DependentUpon>RazorPageListGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\RazorPages\List\RazorPageListGenerator.Interfaces.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -180,13 +236,53 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>IdentityDbContextGenerator.cs</LastGenOutput>
     </None>
-    <None Update="Templates\T4\RazorPages\RazorPageCreateGenerator.tt">
+    <None Update="Templates\T4\RazorPages\Create\RazorPageCreateGenerator.tt">
       <LastGenOutput>RazorPageCreateGenerator.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
-    <None Update="Templates\T4\RazorPages\RazorPageEmptyGenerator.tt">
+    <None Update="Templates\T4\RazorPages\Create\RazorPageCreateCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageCreateCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\RazorPages\Delete\RazorPageDeleteCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageDeleteCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\RazorPages\Delete\RazorPageDeleteGenerator.tt">
+      <LastGenOutput>RazorPageDeleteGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\RazorPages\Details\RazorPageDetailsCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageDetailsCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\RazorPages\Details\RazorPageDetailsGenerator.tt">
+      <LastGenOutput>RazorPageDetailsGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\RazorPages\Edit\RazorPageEditCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageEditCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\RazorPages\Edit\RazorPageEditGenerator.tt">
+      <LastGenOutput>RazorPageEditGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\RazorPages\Empty\RazorPageEmptyCshtmlGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>RazorPageEmptyCshtmlGenerator.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\T4\RazorPages\Empty\RazorPageEmptyGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>RazorPageEmptyGenerator.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\T4\RazorPages\List\RazorPageListCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageListCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\RazorPages\List\RazorPageListGenerator.tt">
+      <LastGenOutput>RazorPageListGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
   </ItemGroup>
 
