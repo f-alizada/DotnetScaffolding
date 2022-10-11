@@ -110,7 +110,9 @@ namespace Microsoft.DotNet.Tools.Scaffold
                         // The help option for the commands are handled by System.Commandline.
                         return 0;
                     }
-                    args.Add("--use-new")
+                    //add --use-new for using dotnet-new when applicable.
+                    Array.Resize(ref args, args.Length + 1);
+                    args[args.Length - 1] = "--use-new";
                     args[0] = args[0].Replace("--", "");
                     return VisualStudio.Web.CodeGeneration.Tools.Program.Main(args);
                 default:

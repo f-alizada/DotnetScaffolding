@@ -9,13 +9,8 @@ using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
-using System.ComponentModel.Design;
 using System.Collections.Generic;
 using Microsoft.Extensions.Internal;
-using Microsoft.DotNet.MSIdentity.Shared;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Resources;
-using System.Linq;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
 {
@@ -60,9 +55,17 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
                 {
                     throw new ArgumentException(MessageStrings.TemplateNameRequired);
                 }
-                System.Diagnostics.Debugger.Launch();
-                _logger.LogMessage("Testing empty dotnet page");
-                EmptyDotNetPage(razorPageGeneratorModel);
+
+                if (razorPageGeneratorModel.UseNew)
+                {
+                    EmptyDotNetPage(razorPageGeneratorModel);
+                }
+                //older razor templating for backwards-compat
+                else
+                {
+                    RazorPageScaffolderBase scaffolder = ActivatorUtilities.CreateInstance<EmptyRazorPageScaffolder>(_serviceProvider);
+                    await scaffolder.GenerateCode(razorPageGeneratorModel);
+                }
             }
             else
             {

@@ -36,6 +36,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
         [Option(Name = "controllerNamespace", ShortName = "namespace", Description = "Specify the name of the namespace to use for the generated controller")]
         public string ControllerNamespace { get; set; }
 
+        [Option(Name = "use-new", Description = "Use this option to opt in to use dotnet-new")]
+        public bool UseNew { get; set; } = false;
+
         public abstract CommonCommandLineModel Clone();
 
         protected CommonCommandLineModel()
@@ -53,6 +56,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
             RelativeFolderPath = copyFrom.RelativeFolderPath;
             ControllerNamespace = copyFrom.ControllerNamespace;
             UseSqlite = copyFrom.UseSqlite;
+            UseNew = copyFrom.UseNew;
         }
     }
 }
