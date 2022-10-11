@@ -61,6 +61,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
                     throw new ArgumentException(MessageStrings.TemplateNameRequired);
                 }
                 System.Diagnostics.Debugger.Launch();
+                _logger.LogMessage("Testing empty dotnet page");
                 EmptyDotNetPage(razorPageGeneratorModel);
             }
             else
@@ -86,20 +87,26 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
 
             var outputPath = ValidateAndGetOutputPath(razorPageGeneratorModel, outputFileName: razorPageGeneratorModel.RazorPageName + Constants.ViewExtension);
             var outputFolder = Path.GetDirectoryName(outputPath);
-            var pageName = Path.GetFileName(outputPath);
+            var pageName = Path.GetFileNameWithoutExtension(outputPath);
             var namespaceName = string.IsNullOrEmpty(razorPageGeneratorModel.NamespaceName)
                 ? NameSpaceUtilities.GetSafeNameSpaceFromPath(razorPageGeneratorModel.RelativeFolderPath, _applicationInfo.ApplicationName)
                 : razorPageGeneratorModel.NamespaceName;
-
-            args.Add($"--name {pageName}");
-            args.Add($"--output {outputFolder}");
-            args.Add($"--force={razorPageGeneratorModel.Force}");
-            args.Add($"--namespace {namespaceName}");
-            args.Add($"--no-pagemodel={razorPageGeneratorModel.NoPageModel}");
+            
+            args.Add("page");
+            args.Add("--name");
+            args.Add(pageName);
+            args.Add("--output");
+            args.Add(outputFolder);
+            args.Add("--force=");
+            args.Add(razorPageGeneratorModel.Force.ToString());
+            args.Add("--namespace");
+            args.Add(namespaceName);
+            args.Add("--no-pagemodel=");
+            args.Add(razorPageGeneratorModel.NoPageModel.ToString());
 
             //Create an empty razor page using `dotnet new page`
             var result = Command.CreateDotNet(
-                "new page",
+                "new",
                 args.ToArray())
                 .OnErrorLine(e => errors.Add(e))
                 .OnOutputLine(o => output.Add(o))
@@ -114,6 +121,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
             {
                _logger.LogMessage($"Successfully created razor page:\n{outputPath}", LogMessageLevel.Information);
             }
+            _logger.LogMessage("Doooone");
         }
     }
 }
