@@ -56,16 +56,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
                     throw new ArgumentException(MessageStrings.TemplateNameRequired);
                 }
 
-                if (razorPageGeneratorModel.UseNew)
-                {
-                    EmptyDotNetPage(razorPageGeneratorModel);
-                }
-                //older razor templating for backwards-compat
-                else
-                {
-                    RazorPageScaffolderBase scaffolder = ActivatorUtilities.CreateInstance<EmptyRazorPageScaffolder>(_serviceProvider);
-                    await scaffolder.GenerateCode(razorPageGeneratorModel);
-                }
+                EmptyDotNetPage(razorPageGeneratorModel);
             }
             else
             {
