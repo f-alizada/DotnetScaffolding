@@ -295,7 +295,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
             return templateModel;
         }
 
-        private string GetDefaultPageModelNamespaceName(string relativeFolderPath)
+        protected string GetDefaultPageModelNamespaceName(string relativeFolderPath)
         {
             return NameSpaceUtilities.GetSafeNameSpaceFromPath(relativeFolderPath, _projectContext.RootNamespace);
         }

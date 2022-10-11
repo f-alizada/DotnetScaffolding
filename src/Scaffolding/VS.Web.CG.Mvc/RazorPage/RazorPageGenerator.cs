@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -8,6 +8,14 @@ using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
+using System.ComponentModel.Design;
+using System.Collections.Generic;
+using Microsoft.Extensions.Internal;
+using Microsoft.DotNet.MSIdentity.Shared;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Resources;
+using System.Linq;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
 {
@@ -16,6 +24,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger _logger;
+        private readonly IApplicationInfo _applicationInfo;
 
         public RazorPageGenerator(
             IApplicationInfo applicationInfo,
@@ -28,18 +37,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
                 throw new ArgumentNullException(nameof(applicationInfo));
             }
 
-            if (serviceProvider == null)
-            {
-                throw new ArgumentNullException(nameof(serviceProvider));
-            }
-
-            if (logger == null)
-            {
-                throw new ArgumentNullException(nameof(logger));
-            }
-
-            _serviceProvider = serviceProvider;
-            _logger = logger;
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _applicationInfo = applicationInfo ?? throw new ArgumentNullException(nameof(applicationInfo));
         }
 
         public async Task GenerateCode(RazorPageGeneratorModel razorPageGeneratorModel)
@@ -60,9 +60,8 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
                 {
                     throw new ArgumentException(MessageStrings.TemplateNameRequired);
                 }
-
-                RazorPageScaffolderBase scaffolder = ActivatorUtilities.CreateInstance<EmptyRazorPageScaffolder>(_serviceProvider);
-                await scaffolder.GenerateCode(razorPageGeneratorModel);
+                System.Diagnostics.Debugger.Launch();
+                EmptyDotNetPage(razorPageGeneratorModel);
             }
             else
             {
@@ -76,6 +75,44 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
                 {   // Razor page CRUD using EF
                     await scaffolder.GenerateViews(razorPageGeneratorModel);
                 }
+            }
+        }
+
+        internal void EmptyDotNetPage(RazorPageGeneratorModel razorPageGeneratorModel)
+        {
+            var errors = new List<string>();
+            var output = new List<string>();
+            var args = new List<string>();
+
+            var outputPath = ValidateAndGetOutputPath(razorPageGeneratorModel, outputFileName: razorPageGeneratorModel.RazorPageName + Constants.ViewExtension);
+            var outputFolder = Path.GetDirectoryName(outputPath);
+            var pageName = Path.GetFileName(outputPath);
+            var namespaceName = string.IsNullOrEmpty(razorPageGeneratorModel.NamespaceName)
+                ? NameSpaceUtilities.GetSafeNameSpaceFromPath(razorPageGeneratorModel.RelativeFolderPath, _applicationInfo.ApplicationName)
+                : razorPageGeneratorModel.NamespaceName;
+
+            args.Add($"--name {pageName}");
+            args.Add($"--output {outputFolder}");
+            args.Add($"--force={razorPageGeneratorModel.Force}");
+            args.Add($"--namespace {namespaceName}");
+            args.Add($"--no-pagemodel={razorPageGeneratorModel.NoPageModel}");
+
+            //Create an empty razor page using `dotnet new page`
+            var result = Command.CreateDotNet(
+                "new page",
+                args.ToArray())
+                .OnErrorLine(e => errors.Add(e))
+                .OnOutputLine(o => output.Add(o))
+                .Execute();
+
+            if (result.ExitCode != 0)
+            {
+                _logger.LogMessage("Error creating empty razor page.\n", LogMessageLevel.Error);
+                throw new Exception(string.Join(Environment.NewLine, errors));
+            }
+            else
+            {
+               _logger.LogMessage($"Successfully created razor page:\n{outputPath}", LogMessageLevel.Information);
             }
         }
     }
