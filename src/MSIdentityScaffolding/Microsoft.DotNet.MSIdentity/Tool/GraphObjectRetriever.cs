@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.MSIdentity.Properties;
-using Microsoft.DotNet.MSIdentity.Shared;
+using Microsoft.DotNet.Scaffolding.Shared.MsIdentity;
 using Microsoft.Graph;
 
 namespace Microsoft.DotNet.MSIdentity.Tool

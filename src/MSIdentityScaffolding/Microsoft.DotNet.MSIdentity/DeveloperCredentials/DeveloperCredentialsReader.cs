@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using Azure.Core;
-using Microsoft.DotNet.MSIdentity.Shared;
+using Microsoft.DotNet.Scaffolding.Shared.MsIdentity;
 
 namespace Microsoft.DotNet.MSIdentity.DeveloperCredentials
 {

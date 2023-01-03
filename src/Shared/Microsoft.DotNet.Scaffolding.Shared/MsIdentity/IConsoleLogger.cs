@@ -1,4 +1,4 @@
-namespace Microsoft.DotNet.MSIdentity.Shared
+namespace Microsoft.DotNet.Scaffolding.Shared.MsIdentity
 {
     public interface IConsoleLogger
     {

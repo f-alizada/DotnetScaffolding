@@ -10,8 +10,8 @@
 
 namespace Microsoft.DotNet.Scaffolding.Shared {
     using System;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,15 +23,15 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class MessageStrings {
-
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal MessageStrings() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -45,7 +45,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
@@ -59,7 +59,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Add directory: &apos;{0}&apos;.
         /// </summary>
@@ -68,7 +68,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("AddDirectoryMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Add File: &apos;{0}&apos;.
         /// </summary>
@@ -77,7 +77,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("AddFileMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Added {0} to user secrets..
         /// </summary>
@@ -86,7 +86,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("AddingKeyToUserSecrets", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Adding package {0} . . ..
         /// </summary>
@@ -95,7 +95,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("AddingPackage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Contents: {0}.
         /// </summary>
@@ -104,7 +104,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("ContentsMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Deleted file: &apos;{0}&apos;.
         /// </summary>
@@ -113,7 +113,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("DeleteFileMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Error while running dotnet-user-secrets init.
         /// </summary>
@@ -122,7 +122,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("DotnetUserSecretsError", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Edit File: &apos;{0}&apos;.
         /// </summary>
@@ -131,7 +131,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("EditFileMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to :::End FileSystemChange:::.
         /// </summary>
@@ -140,16 +140,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("EndFileSystemChangeToken", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to To scaffold controllers and views using models, install Entity Framework core packages and try again: {0}.
-        /// </summary>
-        internal static string InstallEfPackages {
-            get {
-                return ResourceManager.GetString("InstallEfPackages", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Executing `dotnet new`....
         /// </summary>
@@ -158,16 +149,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("ExecuteDotnetNew", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to To scaffold, install the following Entity Framework core packages and try again: {0}.
-        /// </summary>
-        internal static string InstallSqlPackage {
-            get {
-                return ResourceManager.GetString("InstallSqlPackage", resourceCulture);
-            }
-        }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to FAILED\n\n.
         /// </summary>
@@ -176,7 +158,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("Failed", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Failed to add package {0}.
         /// </summary>
@@ -185,7 +167,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("FailedAddPackage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Failed executing `dotnet new`.
         /// </summary>
@@ -194,7 +176,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("FailedDotnetNew", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Initializing User Secrets . . ..
         /// </summary>
@@ -203,7 +185,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("InitializeUserSecrets", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Invalid FileSystemChange message..
         /// </summary>
@@ -212,7 +194,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("InvalidFileSystemChangeMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to ProjectInformation Response received is not valid..
         /// </summary>
@@ -221,7 +203,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("InvalidProjectInformationMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The protocol version &apos;{0}&apos; of the message is different than currently handled version &apos;{1}&apos;..
         /// </summary>
@@ -230,7 +212,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("ProtocolVersionMismatch", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Deleted directory: &apos;{0}&apos;.
         /// </summary>
@@ -239,7 +221,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("RemoveDirectoryMessage", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to :::Start FileSystemChange:::.
         /// </summary>
@@ -248,7 +230,7 @@ namespace Microsoft.DotNet.Scaffolding.Shared {
                 return ResourceManager.GetString("StartFileSystemChangeToken", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Success!.
         /// </summary>

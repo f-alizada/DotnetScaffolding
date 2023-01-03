@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -34,7 +35,12 @@ namespace Microsoft.DotNet.Scaffolding.Shared.ProjectModel
             { ".NETCoreApp,Version=v6.0", "net6.0" },
             { ".NETCoreApp,Version=v2.1", "netcoreapp2.1" },
             { ".NETCoreApp,Version=v7.0", "net7.0" },
-            { ".NETCoreApp,Version=v8.0", "net8.0" },
+            { ".NETCoreApp,Version=v8.0", "net8.0" }
         };
+
+        internal static bool IsTfmPreRelease(string tfm)
+        {
+            return tfm.Equals("net8.0", StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

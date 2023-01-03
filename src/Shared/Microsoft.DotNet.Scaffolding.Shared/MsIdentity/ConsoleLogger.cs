@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Microsoft.DotNet.MSIdentity.Shared
+namespace Microsoft.DotNet.Scaffolding.Shared.MsIdentity
 {
     internal class ConsoleLogger : IConsoleLogger
     {

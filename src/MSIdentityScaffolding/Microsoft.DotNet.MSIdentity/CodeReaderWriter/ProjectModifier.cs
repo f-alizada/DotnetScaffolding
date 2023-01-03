@@ -11,10 +11,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
 using Microsoft.DotNet.MSIdentity.Properties;
-using Microsoft.DotNet.MSIdentity.Shared;
 using Microsoft.DotNet.MSIdentity.Tool;
 using Microsoft.DotNet.Scaffolding.Shared.CodeModifier;
 using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
+using Microsoft.DotNet.Scaffolding.Shared.MsIdentity;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
 
 namespace Microsoft.DotNet.MSIdentity.CodeReaderWriter

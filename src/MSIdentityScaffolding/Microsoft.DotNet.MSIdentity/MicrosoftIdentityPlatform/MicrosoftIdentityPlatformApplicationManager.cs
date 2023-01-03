@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using Azure.Core;
 using Microsoft.DotNet.MSIdentity.AuthenticationParameters;
 using Microsoft.DotNet.MSIdentity.Properties;
-using Microsoft.DotNet.MSIdentity.Shared;
 using Microsoft.DotNet.MSIdentity.Tool;
 using Microsoft.DotNet.Scaffolding.Shared;
+using Microsoft.DotNet.Scaffolding.Shared.MsIdentity;
 using Microsoft.Graph;
 
 namespace Microsoft.DotNet.MSIdentity.MicrosoftIdentityPlatformApplication
@@ -572,7 +572,7 @@ namespace Microsoft.DotNet.MSIdentity.MicrosoftIdentityPlatformApplication
 
                     try
                     {
-                        // TODO: See https://github.com/jmprieur/app-provisonning-tool/issues/9. 
+                        // TODO: See https://github.com/jmprieur/app-provisonning-tool/issues/9.
                         // We need to process the case where the developer is not a tenant admin
                         await graphServiceClient.Oauth2PermissionGrants
                             .Request()

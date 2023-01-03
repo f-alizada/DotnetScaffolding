@@ -9,8 +9,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
 using Microsoft.CodeAnalysis.Formatting;
-using Microsoft.DotNet.MSIdentity.Shared;
 using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
+using Microsoft.DotNet.Scaffolding.Shared.MsIdentity;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
 using NuGet.Protocol;
 

@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Microsoft.DotNet.MSIdentity.Shared
+namespace Microsoft.DotNet.Scaffolding.Shared.MsIdentity
 {
     public class JsonResponse
     {

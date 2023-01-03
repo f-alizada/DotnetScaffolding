@@ -15,10 +15,11 @@ using Microsoft.DotNet.MSIdentity.MicrosoftIdentityPlatform;
 using Microsoft.DotNet.MSIdentity.MicrosoftIdentityPlatformApplication;
 using Microsoft.DotNet.MSIdentity.Project;
 using Microsoft.DotNet.MSIdentity.Properties;
-using Microsoft.DotNet.MSIdentity.Shared;
 using Microsoft.DotNet.MSIdentity.Tool;
+using Microsoft.DotNet.Scaffolding.Shared.Cli.Utils;
+using Microsoft.DotNet.Scaffolding.Shared.MsIdentity;
 using Microsoft.Graph;
-using ConsoleLogger = Microsoft.DotNet.MSIdentity.Shared.ConsoleLogger;
+using ConsoleLogger = Microsoft.DotNet.Scaffolding.Shared.MsIdentity.ConsoleLogger;
 using Directory = System.IO.Directory;
 using ProjectDescription = Microsoft.DotNet.MSIdentity.Project.ProjectDescription;
 
@@ -348,7 +349,7 @@ namespace Microsoft.DotNet.MSIdentity
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tokenCredential"></param>
         /// <param name="applicationParameters"></param>
@@ -369,7 +370,7 @@ namespace Microsoft.DotNet.MSIdentity
             if (ProvisioningToolOptions.ConfigUpdate)
             {
                 // dotnet user secrets init
-                CodeWriter.InitUserSecrets(ProvisioningToolOptions.ProjectPath, ConsoleLogger);
+                DotnetCommands.InitUserSecrets(ProvisioningToolOptions.ProjectPath, ConsoleLogger);
 
                 // Add ClientSecret if the app wants to call graph/a downstream api.
                 if (ProvisioningToolOptions.CallsGraph || ProvisioningToolOptions.CallsDownstreamApi)
@@ -432,7 +433,7 @@ namespace Microsoft.DotNet.MSIdentity
                                     // if package doesn't exist, add it.
                                     if (!tfm.Dependencies.Where(x => x.Name.Equals(packageToInstall)).Any())
                                     {
-                                        CodeWriter.AddPackage(packageToInstall, shortTfm, ConsoleLogger);
+                                        DotnetCommands.AddPackage(packageToInstall, shortTfm, ConsoleLogger);
                                     }
                                 }
                             }
@@ -453,7 +454,7 @@ namespace Microsoft.DotNet.MSIdentity
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tokenCredential"></param>
         /// <param name="applicationParameters"></param>
@@ -501,7 +502,7 @@ namespace Microsoft.DotNet.MSIdentity
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tokenCredential"></param>
         /// <param name="applicationParameters"></param>
@@ -568,7 +569,7 @@ namespace Microsoft.DotNet.MSIdentity
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="summary"></param>
         private void WriteSummary(Summary summary)
@@ -581,7 +582,7 @@ namespace Microsoft.DotNet.MSIdentity
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="summary"></param>
         /// <param name="reconcialedApplicationParameters"></param>
@@ -594,7 +595,7 @@ namespace Microsoft.DotNet.MSIdentity
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="summary"></param>
         /// <param name="projectSettings"></param>
@@ -605,14 +606,14 @@ namespace Microsoft.DotNet.MSIdentity
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="applicationParameters"></param>
         /// <param name="effectiveApplicationParameters"></param>
         /// <returns></returns>
         private bool Reconciliate(ApplicationParameters applicationParameters, ApplicationParameters effectiveApplicationParameters)
         {
-            // Redirect URIs that are needed by the code, but not yet registered 
+            // Redirect URIs that are needed by the code, but not yet registered
             IEnumerable<string> missingRedirectUri = applicationParameters.WebRedirectUris.Except(effectiveApplicationParameters.WebRedirectUris);
 
             bool needUpdate = missingRedirectUri.Any();
@@ -634,7 +635,7 @@ namespace Microsoft.DotNet.MSIdentity
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tokenCredential"></param>
         /// <param name="applicationParameters"></param>

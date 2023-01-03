@@ -274,7 +274,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
                 var docEditor = await DocumentEditor.CreateAsync(programDocument);
 
                 var docRoot = docEditor.OriginalRoot as CompilationUnitSyntax;
-                var docBuilder = new DocumentBuilder(docEditor, programCsFile, new Microsoft.DotNet.MSIdentity.Shared.ConsoleLogger(jsonOutput: false));
+                var docBuilder = new DocumentBuilder(docEditor, programCsFile, new Microsoft.DotNet.Scaffolding.Shared.MsIdentity.ConsoleLogger(jsonOutput: false));
                 //adding usings
                 var modifiedRoot = docBuilder.AddUsings(new CodeChangeOptions());
                 var useTopLevelsStatements = await ProjectModifierHelper.IsUsingTopLevelStatements(modelTypesLocator);

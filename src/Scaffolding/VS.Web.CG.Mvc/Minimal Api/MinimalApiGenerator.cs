@@ -19,7 +19,7 @@ using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
-using ConsoleLogger = Microsoft.DotNet.MSIdentity.Shared.ConsoleLogger;
+using ConsoleLogger = Microsoft.DotNet.Scaffolding.Shared.MsIdentity.ConsoleLogger;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
 {
@@ -56,7 +56,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
             ProjectContext = projectContext ?? throw new ArgumentNullException(nameof(projectContext));
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             EntityFrameworkService = entityframeworkService ?? throw new ArgumentNullException(nameof(entityframeworkService));
-            ConsoleLogger = new DotNet.MSIdentity.Shared.ConsoleLogger(jsonOutput: false);
+            ConsoleLogger = new DotNet.Scaffolding.Shared.MsIdentity.ConsoleLogger(jsonOutput: false);
         }
 
         /// <summary>
