@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
 {
-    internal static class T4TemplateHelper
+    internal static class  T4TemplateHelper
     {
         public static IEnumerable<string> GetTemplateFoldersT4(string appBasePath, string baseFolder, IProjectContext projectContext)
         {

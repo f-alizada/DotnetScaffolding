@@ -92,7 +92,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
         private async Task<SyntaxTree> AddNewContextItemsInternal(string templateName, NewDbContextTemplateModel dbContextTemplateModel)
         {
             var templatePath = _filesLocator.GetFilePath(templateName, TemplateFolders);
-            var abc = T4TemplateHelper.GetTemplateFoldersT4(_applicationInfo.ApplicationBasePath, Path.Combine("T4", "RazorPages"), _projectContext)?.FirstOrDefault();
+            //var abc = T4TemplateHelper.GetTemplateFoldersT4(_applicationInfo.ApplicationBasePath, Path.Combine("T4", "RazorPages"), _projectContext)?.FirstOrDefault();
             Contract.Assert(File.Exists(templatePath));
 
             var templateContent = File.ReadAllText(templatePath);

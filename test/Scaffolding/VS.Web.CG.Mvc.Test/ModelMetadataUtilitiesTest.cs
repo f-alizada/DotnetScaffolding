@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
-using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi;
 using Moq;
@@ -117,7 +116,11 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Test
                 ModelMetadata = null
             };
 
+<<<<<<< HEAD
             efService.Setup(e => e.GetModelMetadata(model.DataContextClass, modelType, string.Empty, DbProvider.SqlServer))
+=======
+            efService.Setup(e => e.GetModelMetadata(model.DataContextClass, modelType, string.Empty, false, false))
+>>>>>>> c9d530c4 (fix errors, still mid rn)
                 .Returns(Task.FromResult(contextProcessingResult));
 
             //Act
@@ -140,7 +143,11 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Test
                 FullName = "A.B.C.SampleDataContext"
             };
             dataContextTypes.Add(dataContextType);
+<<<<<<< HEAD
             efService.Setup(e => e.GetModelMetadata(dataContextType.FullName, modelType, string.Empty, DbProvider.SqlServer))
+=======
+            efService.Setup(e => e.GetModelMetadata(dataContextType.FullName, modelType, string.Empty, false, false))
+>>>>>>> c9d530c4 (fix errors, still mid rn)
                 .Returns(Task.FromResult(contextProcessingResult));
 
             //Act
@@ -222,7 +229,11 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Test
                 ModelMetadata = null
             };
 
+<<<<<<< HEAD
             efService.Setup(e => e.GetModelMetadata(minimalApiModelWithContext.DataContextClass, modelType, string.Empty, DbProvider.SqlServer))
+=======
+            efService.Setup(e => e.GetModelMetadata(minimalApiModelWithContext.DataContextClass, modelType, string.Empty, false, false))
+>>>>>>> c9d530c4 (fix errors, still mid rn)
                 .Returns(Task.FromResult(contextProcessingResult));
 
             //Act

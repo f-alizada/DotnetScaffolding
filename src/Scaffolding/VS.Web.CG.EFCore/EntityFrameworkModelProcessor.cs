@@ -384,13 +384,15 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             //minimal hosting scenario
             if (startupType == null)
             {
+                await CreateDbContextT4(startupType, programType);
                 //_dbContextEditorServices.()
             }
         }
 
         private async Task CreateDbContextT4(ModelType startupType, ModelType programType)
         {
-            var dbContextTemplateModel = new NewDbContextTemplateModel(_dbContextFullTypeName, _modelTypeSymbol, programType, nullabledEnabled);
+            var nullableEnabled = true;
+            var dbContextTemplateModel = new NewDbContextTemplateModel(_dbContextFullTypeName, _modelTypeSymbol, programType, nullableEnabled);
             ContextProcessingStatus = ContextProcessingStatus.ContextAdded;
             bool useTopLevelsStatements = await ProjectModifierHelper.IsUsingTopLevelStatements(_modelTypesLocator);
             //minimal hosting scenario
