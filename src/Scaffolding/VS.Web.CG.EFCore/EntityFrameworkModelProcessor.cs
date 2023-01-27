@@ -86,7 +86,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             var startupClassName = await ProjectModifierHelper.GetStartupClassName(programDocument);
             var startupType = _modelTypesLocator.GetType(startupClassName).FirstOrDefault() ?? _modelTypesLocator.GetType("Startup").FirstOrDefault();
             ModelType dbContextSymbolInWebProject = null;
-            //if there is no Startup.cs (minimal hosting app), this scaffolding scanerio is not supported.
+            //if there is no Startup.cs (minimal hosting app), this scaffolding scenario is not supported.
             if (startupType == null)
             {
                 _logger.LogMessage("\nMinimal hosting scenario!");
@@ -97,7 +97,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
 
                 if (!dbContextSymbols.Any())
                 {
-                    await GenerateNewDbContextAndRegisterProgramFile(programType, _applicationInfo);
+                    await GenerateNewDbContextAndRegisterProgramFile(programType);
                 }
                 else if (TryGetDbContextSymbolInWebProject(dbContextSymbols, out dbContextSymbolInWebProject))
                 {
@@ -222,11 +222,6 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             }
         }
 
-<<<<<<< HEAD
-
-        public ContextProcessingStatus ContextProcessingStatus { get; private set; }
-        public ModelMetadata ModelMetadata { get; private set; }
-=======
         public async Task ProcessT4()
         {
             var programType = _modelTypesLocator.GetType("<Program>$").FirstOrDefault() ?? _modelTypesLocator.GetType("Program").FirstOrDefault();
@@ -243,9 +238,8 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                 await GetDbContextT4(startupType: startupType, programType: programType);
             }
         }
-        public ContextProcessingStatus ContextProcessingStatus { get; private set;}
-        public ModelMetadata ModelMetadata { get; private set;}
->>>>>>> 9081f4b7 (almost getting that db template done.)
+        public ContextProcessingStatus ContextProcessingStatus { get; private set; }
+        public ModelMetadata ModelMetadata { get; private set; }
 
         /// <summary>
         /// Writes the DbContext to disk using the given Roslyn SyntaxTree.
@@ -401,13 +395,15 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                 await _dbContextEditorServices.AddNewContextT4(dbContextTemplateModel: dbContextTemplateModel);
                 if (programType != null)
                 {
-                    _programEditResult = _dbContextEditorServices.EditStartupForNewContext(
-                        programType,
-                        dbContextTemplateModel.DbContextTypeName,
-                        dbContextTemplateModel.DbContextNamespace,
-                        dataBaseName: dbContextTemplateModel.DbContextTypeName + "-" + Guid.NewGuid().ToString(),
-                        _useSqlite,
-                        useTopLevelsStatements);
+                    var parameters = new Dictionary<string, string>
+                    {
+                        { nameof(NewDbContextTemplateModel.DbContextTypeName),  dbContextTemplateModel.DbContextTypeName },
+                        { nameof(NewDbContextTemplateModel.DbContextNamespace),  dbContextTemplateModel.DbContextNamespace },
+                        { "dataBaseName", dbContextTemplateModel.DbContextTypeName + "-" + Guid.NewGuid().ToString()},
+                        { "databaseProvider", _databaseProvider.ToString() },
+                        { "useTopLevelStatements", useTopLevelsStatements.ToString() }
+                    };
+                    _programEditResult = _dbContextEditorServices.EditStartupForNewContext(programType, parameters);
                 }
 
                 if (!_programEditResult.Edited)
@@ -422,12 +418,15 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             else
             {
                 await _dbContextEditorServices.AddNewContextT4(dbContextTemplateModel: dbContextTemplateModel);
-                _startupEditResult = _dbContextEditorServices.EditStartupForNewContext(startupType,
-                    dbContextTemplateModel.DbContextTypeName,
-                    dbContextTemplateModel.DbContextNamespace,
-                    dataBaseName: dbContextTemplateModel.DbContextTypeName + "-" + Guid.NewGuid().ToString(),
-                    _useSqlite,
-                    useTopLevelsStatements);
+                var parameters = new Dictionary<string, string>
+                {
+                    { nameof(NewDbContextTemplateModel.DbContextTypeName),  dbContextTemplateModel.DbContextTypeName },
+                    { nameof(NewDbContextTemplateModel.DbContextNamespace),  dbContextTemplateModel.DbContextNamespace },
+                    { "dataBaseName", dbContextTemplateModel.DbContextTypeName + "-" + Guid.NewGuid().ToString()},
+                    { "databaseProvider", _databaseProvider.ToString() },
+                    { "useTopLevelStatements", useTopLevelsStatements.ToString() }
+                };
+                _startupEditResult = _dbContextEditorServices.EditStartupForNewContext(startupType, parameters);
             }
         }
         private async Task GenerateNewDbContextAndRegisterProgramFile(ModelType programType)

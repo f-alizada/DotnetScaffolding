@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.RazorPages.Create
+namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
 {
     using System.Collections.Generic;
     using System.Text;
@@ -28,7 +28,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.RazorPages.
             this.Write(this.ToStringHelper.ToStringWithCulture(RazorPageModel.NamespaceName));
             this.Write(".");
             this.Write(this.ToStringHelper.ToStringWithCulture(RazorPageModel.RazorPageName));
-            this.Write("\r\n@{\r\n}\r\n");
+            this.Write("\r\n@{\r\n}\r\n<!DOCTYPE html>\r\n\r\n<html>\r\n<head>\r\n    <meta name=\"viewport\" content=\"wi" +
+                    "dth=device-width\" />\r\n    <title>@Model.RazorPageName</title>\r\n</head>\r\n<body>\r\n" +
+                    "");
             return this.GenerationEnvironment.ToString();
         }
         private global::Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost hostValue;

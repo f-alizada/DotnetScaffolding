@@ -20,7 +20,6 @@ using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
 {
@@ -230,7 +229,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
                         templateModel.DbContextClass,
                         templateModel.UserClass,
                         templateModel.DbContextNamespace,
-                        templateModel.UseSQLite);
+                        templateModel.DatabaseProvider);
                 }
 
                 //edit Program.cs in minimal hosting scenario
@@ -373,7 +372,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
             if (stringToModify.Contains(OptionsUseConnectionString))
             {
                 modifiedString = modifiedString.Replace("options.{0}",
-                    databaseProvider.Equals(DbProvider.SQLite) ?  $"options.{UseSqlite}" : $"options.{UseSqlServer}");
+                    databaseProvider.Equals(DbProvider.SQLite) ? $"options.{UseSqlite}" : $"options.{UseSqlServer}");
             }
             if (stringToModify.Contains(GetConnectionString))
             {

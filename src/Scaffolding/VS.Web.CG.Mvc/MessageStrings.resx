@@ -269,6 +269,7 @@
   </data>
   <data name="InvalidDatabaseProvider" xml:space="preserve">
     <value>Invalid database provider '{0}' found.</value>
+  </data>
   <data name="T4TemplatingNotSupported" xml:space="preserve">
     <value>T4 templating is not supported for the {0} scaffolder.</value>
   </data>

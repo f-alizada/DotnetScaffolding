@@ -29,12 +29,8 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
         /// <param name="modelTypeName">Model type for which the EF metadata has to be returned.</param>
         /// <param name="areaName">Name of the area on which scaffolding is being run. Used for generating path for new DbContext.</param>
         /// <param name="databaseProvider">enum DbProvider (default DbProvider.SqlServer) </param>
+        /// <param name="useT4">if using T4 templating instead of razor templating</param>
         /// <returns>Returns <see cref="ContextProcessingResult"/>.</returns>
-        Task<ContextProcessingResult> GetModelMetadata(string dbContextFullTypeName, ModelType modelTypeName, string areaName, DbProvider databaseProvider);
-
-        /// <param name="useSqlite">flag for using sqlite instead of sqlserver </param>
-        /// <param name="useT4">flag for using T4 templating instead of razor templating. default false for backwards compat</param>
-        /// <returns>Returns <see cref="ContextProcessingResult"/>.</returns>
-        Task<ContextProcessingResult> GetModelMetadata(string dbContextFullTypeName, ModelType modelTypeName, string areaName, bool useSqlite, bool useT4 = false);
+        Task<ContextProcessingResult> GetModelMetadata(string dbContextFullTypeName, ModelType modelTypeName, string areaName, DbProvider databaseProvider, bool useT4 = false);
     }
 }
