@@ -1,1 +1,38 @@
-﻿
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="Microsoft.VisualStudio.Web.CodeGeneration.Templating" #>
+<#@ import namespace="Microsoft.VisualStudio.Web.CodeGeneration.Templating" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore" #>
+<#
+    string modelName = Model.ModelType.Name;
+    string modelList = $"List<{@modelName}>";
+    string routePrefix = "/api/" + modelName;
+    string endPointsClassName = Model.EndpointsName;
+    string methodName = $"Map{@modelName}Endpoints";
+    string pluralModel = $"{@modelName}s";
+    string getAllModels = $"GetAll{@pluralModel}";
+    string getModelById = $"Get{@modelName}ById";
+    string deleteModel = $"Delete{@modelName}";
+    string createModel = $"Create{@modelName}";
+    string updateModel = $"Update{@modelName}";
+    string dbContextName = Model.ContextTypeName;
+    var entitySetName = Model.ModelMetadata.EntitySetName;
+    var primaryKeyName = Model.ModelMetadata.PrimaryKeys[0].PropertyName;
+    var primaryKeyNameLowerCase = primaryKeyName.ToLowerInvariant();
+    var primaryKeyShortTypeName = Model.ModelMetadata.PrimaryKeys[0].ShortTypeName;
+    var primaryKeyType = Model.ModelMetadata.PrimaryKeys[0].TypeName;
+    var modelToList = $"{@entitySetName}.ToListAsync()";
+    var findModel = $"{@entitySetName}.FindAsync({@primaryKeyNameLowerCase})";
+    var add = $"{@entitySetName}.Add({@Model.ModelVariable})";
+    var remove = $"{@entitySetName}.Remove({@Model.ModelVariable})";
+    string resultsExtension = Model.UseTypedResults ? "TypedResults" : "Results";
+    string typedTaskWithNotFound = Model.UseTypedResults ? $"Task<Results<Ok<{@modelName}>, NotFound>>" : "";
+    string typedTaskWithNoContent = Model.UseTypedResults ? $"Task<Results<NotFound, NoContent>>" : "";
+    string resultsNotFound = $"{resultsExtension}.NotFound()";
+    string resultsOkModel = $"{resultsExtension}.Ok(model)";
+    string resultsNoContent = $"{resultsExtension}.NoContent()";
+    string resultsOkModelVariable = $"{resultsExtension}.Ok({@Model.ModelVariable})";
+    string createdApiVar = string.Format("$\"{0}/{{{1}.{2}}}\",{3}", @routePrefix, @Model.ModelVariable, @primaryKeyName, @Model.ModelVariable);
+    string resultsCreated = $"{resultsExtension}.Created(" + $"{@createdApiVar}" + ")";
+    string builderExtensionSpaces = new string(' ', 8);
+#>

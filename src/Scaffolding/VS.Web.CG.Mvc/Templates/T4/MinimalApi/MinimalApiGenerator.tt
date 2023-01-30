@@ -1,130 +1,142 @@
-<#=  template hostSpecific="true" linePragmas="false" #>
-<#=  parameter type="Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi.MinimalApiModel" name="Model" #>
-<#=  import namespace="System.Collections.Generic" #>
-<#=  import namespace="System.Text" #>
+<#@  template hostSpecific="true" linePragmas="false" #>
+<#@  parameter type="Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi.MinimalApiModel" name="Model" #>
+<#@  import namespace="System.Collections.Generic" #>
+<#@  import namespace="System.Text" #>
+<#
+    string modelName = Model.ModelType.Name;
+    string modelConstructor = $"{modelName}()";
+    string modelArray = $"{modelName}[]";
+    string routePrefix = "/api/" + modelName;
+    string endPointsClassName = Model.EndpointsName;
+    string methodName = $"Map{@modelName}Endpoints";
+    string pluralModel = $"{@modelName}s";
+    string getAllModels = $"GetAll{@pluralModel}";
+    string getModelById = $"Get{@modelName}ById";
+    string deleteModel = $"Delete{@modelName}";
+    string createModel = $"Create{@modelName}";
+    string updateModel = $"Update{@modelName}";
+    string resultsExtension = (Model.UseTypedResults ? "TypedResults" : "Results") + ".NoContent()";
+    string builderExtensionSpaces = new string(' ', 8);
+#>
 namespace <#= Model.EndpointsNamespace #>;
 
-public static class <#= Model.EndpointsName #>
+public static class <#= endPointsClassName #>
 {
-    public static void <#= Model.MethodName #>(this IEndpointRouteBuilder routes)
+    public static void <#= Model.MethodName #> (this IEndpointRouteBuilder routes)
     {
-<# 
-    if(Model.OpenAPI)
-    {
-#>
-        var group = routes.MapGroup("<#= routePrefix #>").WithTags(nameof(<#= modelName #>));
-<#  }
-    else
-    {
-#>
-        var group = routes.MapGroup("<#= routePrefix #>");
-<#   }  
-#>
+    <#
+        if(Model.OpenAPI)
+        {
+    #>  var group = routes.MapGroup("<#= routePrefix #>").WithTags(nameof(<#= modelName #>));
+    <#  }
+        else
+        {
+    #>  var group = routes.MapGroup("<#= routePrefix #>");
+    <#  }
+    #>    
+
         group.MapGet("/", () =>
         {
-            return new [] { new <#= modelConstructor #>};
+            return new [] { new <#= modelConstructor #> };
         })
-<#= {
-    string builderExtensions = $".WithName(\"{<#= getAllModels}\")";
-    if(Model.OpenAPI)
-    {
-        builderExtensions += $"\n{builderExtensionSpaces}.WithOpenApi()";
-    }
-    if(!Model.UseTypedResults)
-    {
-        builderExtensions += $"\n{builderExtensionSpaces}.Produces<{<#= modelArray}>(StatusCodes.Status200OK)";
-    }
-        <#= :<#= builderExtensions;
-}
-        
-        group.MapGet("/{id}", (int id) =>
+    <#
+        string builderExtensions = $".WithName(\"{getAllModels}\")";
+        if(Model.OpenAPI)
         {
-            //return new <#= modelName { ID = id };
-        })
-<#= {
-    builderExtensions = $".WithName(\"{<#= getModelById}\")";
-    if(Model.OpenAPI)
-    {
-        builderExtensions += $"\n{builderExtensionSpaces}.WithOpenApi()";
-    }
-    if(!Model.UseTypedResults)
-    {
-        builderExtensions += $"\n{builderExtensionSpaces}.Produces<{<#= modelName}>(StatusCodes.Status200OK)";
-    }
-        <#= :<#= builderExtensions;
-}
-
-        group.MapPut("/{id}", (int id, <#= modelName input) =>
-        {
-            return <#= resultsExtension;
-        })
-<#= {
-    builderExtensions = $".WithName(\"{<#= updateModel}\")";
-    if(Model.OpenAPI)
-    {
-        builderExtensions += $"\n{builderExtensionSpaces}.WithOpenApi()";
-    }
-    if (!Model.UseTypedResults)
-    {
-        builderExtensions += $"\n{builderExtensionSpaces}.Produces(StatusCodes.Status204NoContent)";
-    }
-        <#= :<#= builderExtensions;
-}
-
-        group.MapPost("/", (<#= modelName model) =>
-        {
-        <#= {
+            builderExtensions += $"\n{builderExtensionSpaces}.WithOpenApi()";
+        }
         if(!Model.UseTypedResults)
         {
-            <#= ://return Results.Created($"/<#= pluralModel/{model.ID}", model);
+            builderExtensions += $"\n{builderExtensionSpaces}.Produces<{modelArray}>(StatusCodes.Status200OK)";
         }
-        else
+    #>
+        <#= builderExtensions #>;
+        
+        group.MapGet("/{{id}}", (int id) =>
         {
-            <#= ://return TypedResults.Created($"/<#= pluralModel/{model.ID}", model);
-        }
-        }
+            //return new <#= modelName #> { ID = id };
         })
-<#= {
-    builderExtensions = $".WithName(\"{<#= createModel}\")";
-    if(Model.OpenAPI)
-    {
-    builderExtensions+= $"\n{builderExtensionSpaces}.WithOpenApi()";
-    }
-    if (!Model.UseTypedResults)
-    {
-    builderExtensions += $"\n{builderExtensionSpaces}.Produces<{<#= modelName}>(StatusCodes.Status201Created)";
-    }
-        <#= :<#= builderExtensions;
-}
+    <#
+        builderExtensions = "";
+        if(Model.OpenAPI)
+        {
+            builderExtensions += ".WithOpenApi()";
+        }
+        if(!Model.UseTypedResults)
+        {
+            builderExtensions += ".Produces<" + modelName + ">(StatusCodes.Status200OK)";
+        }
+    #>
+    <#= builderExtensions #>
 
+        group.MapPut("/{id}", (int id, <#= modelName #> input) =>
+        {
+            return <#= resultsExtension #>;
+        })
+    <#
+        builderExtensions = "";
+        if(Model.OpenAPI)
+        {
+            builderExtensions += ".WithOpenApi()";
+        }
+        if (!Model.UseTypedResults)
+        {
+            builderExtensions += ".Produces(StatusCodes.Status204NoContent)";
+        }
+    #>
+        <#= builderExtensions #>
+
+        group.MapPost("/", (<#= modelName #> model) =>
+        {
+        <# if(!Model.UseTypedResults) { #>
+            //return Results.Created("/<#= pluralModel #>/{model.ID}", model);
+        <# } else { #>
+            //return TypedResults.Created("/<#= pluralModel #>/{model.ID}", model);
+        <# } #>
+        }).WithName("<#= updateModel #>")
+        <#= builderExtensions #>
+
+    <#
+        builderExtensions = "";
+        if(Model.OpenAPI)
+        {
+            builderExtensions += ".WithOpenApi()";
+        }
+        if (!Model.UseTypedResults)
+        {
+            builderExtensions += ".Produces<" + modelName + ">(StatusCodes.Status201Created)";
+        }
+    #>
         group.MapDelete("/{id}", (int id) =>
         {
-<#= {
-        if(!Model.UseTypedResults)
-        {
-            <#= ://return Results.Ok(new <#= modelName { ID = id });
-        }
-        else
-        {
-            <#= ://return TypedResults.Ok(new <#= modelName { ID = id });
-        }
-}
-        })
-<#= {
-    builderExtensions = $".WithName(\"{<#= deleteModel}\")";
-    if(Model.OpenAPI)
-    {
-        builderExtensions += $"\n{builderExtensionSpaces}.WithOpenApi()";
-    }
-    if (!Model.UseTypedResults)
-    {
-        builderExtensions += $"\n{builderExtensionSpaces}.Produces<{<#= modelName}>(StatusCodes.Status200OK)";
-    }
-        <#= :<#= builderExtensions;  
-    }
-    }
-}
+            <# if(!Model.UseTypedResults) { #>
+                //return Results.Ok(new <#= modelName #>{ ID = id });
+            <# } else { #>
+                //return TypedResults.Ok(new <#= modelName #> { ID = id });
+            <# } #>
+        }).WithName("<#= createModel #>")
+        <#= builderExtensions #>
 
+    <#
+        builderExtensions = "";
+        if(Model.OpenAPI)
+        {
+            builderExtensions += ".WithOpenApi()";
+        }
+        if (!Model.UseTypedResults)
+        {
+            builderExtensions += ".Produces<" + modelName + ">(StatusCodes.Status200OK)";
+        }
+    #>
+        group.MapDelete("/{id}", (int id) =>
+        {
+            <# if(!Model.UseTypedResults) { #>
+                //return Results.Ok(new <#= modelName #> { ID = id });
+            <# } else { #>
+                //return TypedResults.Ok(new <#= modelName #>
+            <# } #>
+    }
+}
 <#
     StringBuilder mainEnvironment = GenerationEnvironment;
     GenerationEnvironment = new StringBuilder();
