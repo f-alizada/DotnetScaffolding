@@ -5,12 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.DotNet.MSIdentity.Tool;
-using MsIdentity = Microsoft.DotNet.MSIdentity.Tool.Program;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.Extensions.ProjectModel;
 using Microsoft.VisualStudio.Web.CodeGeneration.Design;
-using NuGet.Packaging;
+using MsIdentity = Microsoft.DotNet.MSIdentity.Tool.Program;
 
 namespace Microsoft.DotNet.Tools.Scaffold
 {
@@ -22,6 +21,8 @@ namespace Microsoft.DotNet.Tools.Scaffold
         private const string IDENTITY_COMMAND = "--identity";
         private const string RAZORPAGE_COMMAND = "--razorpage";
         private const string VIEW_COMMAND = "--view";
+        private const string MINIMALAPI_COMMAND = "--minimalapi";
+
         private static ConsoleLogger _logger;
         public static ConsoleLogger Logger
         {
@@ -59,6 +60,7 @@ namespace Microsoft.DotNet.Tools.Scaffold
             rootCommand.AddCommand(ScaffoldRazorPageCommand());
             rootCommand.AddCommand(ScaffoldViewCommand());
             rootCommand.AddCommand(ScaffoldIdentityCommand());
+            rootCommand.AddCommand(ScaffoldMinimalApiCommand());
             //msidentity commands
             //new BinderBase for System.Commandline update, new way to bind handlers to commands.
             var provisioningToolBinder = new ProvisioningToolOptionsBinder(
@@ -149,6 +151,7 @@ namespace Microsoft.DotNet.Tools.Scaffold
                 case IDENTITY_COMMAND:
                 case RAZORPAGE_COMMAND:
                 case VIEW_COMMAND:
+                case MINIMALAPI_COMMAND:
                     if (parseResult.CommandResult.Children.Count == 1 &&
                         string.Equals(parseResult.CommandResult.Children[0].Symbol?.Name, "help", StringComparison.OrdinalIgnoreCase))
                     {
@@ -196,6 +199,7 @@ namespace Microsoft.DotNet.Tools.Scaffold
 
                 return executor.Execute();
             }
+
             return -1;
         }
 
@@ -217,33 +221,6 @@ namespace Microsoft.DotNet.Tools.Scaffold
 
             throw new DirectoryNotFoundException("Targets not found ha");
         }
-
-        private static int Build(ILogger logger, string projectPath, string shortFramework, string buildBasePath)
-        {
-
-            logger.LogMessage("Building project ...");
-            var buildResult = Extensions.Internal.DotNetBuildCommandHelper.Build(
-                projectPath,
-                "Debug",
-                shortFramework,
-                buildBasePath);
-
-            if (buildResult.Result.ExitCode != 0)
-            {
-                //Build failed.
-                // Stop the process here.
-                logger.LogMessage("Build failed!\n");
-                logger.LogMessage(string.Join(Environment.NewLine, buildResult.StdOut), LogMessageLevel.Error);
-                logger.LogMessage(string.Join(Environment.NewLine, buildResult.StdErr), LogMessageLevel.Error);
-            }
-            else
-            {
-                logger.LogMessage("Build succeeded!\n");
-            }
-
-            return buildResult.Result.ExitCode;
-        }
-
 
         private static Option ProjectOption() =>
             new Option<string>(
@@ -446,7 +423,7 @@ namespace Microsoft.DotNet.Tools.Scaffold
             {
                 // Arguments & Options
                ControllerNameOption(), AsyncActionsOption(), GenerateNoViewOption(), RestWithNoViewOption(), ReadWriteActionOption(),
-               ModelClassOption(), DataContextOption(), BootStrapVersionOption(), ReferenceScriptLibrariesOption(), CustomLayoutOption(), UseDefaultLayoutOption(), OverwriteFilesOption(), RelativeFolderPathOption(),
+               ModelClassOption(), DataContextOption(),DbProviderOption(), BootStrapVersionOption(), ReferenceScriptLibrariesOption(), CustomLayoutOption(), UseDefaultLayoutOption(), OverwriteFilesOption(), RelativeFolderPathOption(),
                ControllerNamespaceOption(), UseSQLliteOption()
             };
 
@@ -500,7 +477,7 @@ namespace Microsoft.DotNet.Tools.Scaffold
 
                 // Options
                 RazorpageNamespaceNameOption(), PartialViewOption(), NoPageModelOption(),
-                ModelClassOption(), DataContextOption(), BootStrapVersionOption(), ReferenceScriptLibrariesOption(), CustomLayoutOption(), UseDefaultLayoutOption(), OverwriteFilesOption(), RelativeFolderPathOption(),
+                ModelClassOption(), DataContextOption(), DbProviderOption(), BootStrapVersionOption(), ReferenceScriptLibrariesOption(), CustomLayoutOption(), UseDefaultLayoutOption(), OverwriteFilesOption(), RelativeFolderPathOption(),
                 UseSQLliteOption()
             };
 
@@ -521,7 +498,7 @@ namespace Microsoft.DotNet.Tools.Scaffold
                 ViewNameArgument(),TemplateNameArgument(),
 
                 // Options
-                ModelClassOption(), DataContextOption(), BootStrapVersionOption(), ReferenceScriptLibrariesOption(), CustomLayoutOption(), UseDefaultLayoutOption(), OverwriteFilesOption(), RelativeFolderPathOption(),
+                ModelClassOption(), DataContextOption(), DbProviderOption(), BootStrapVersionOption(), ReferenceScriptLibrariesOption(), CustomLayoutOption(), UseDefaultLayoutOption(), OverwriteFilesOption(), RelativeFolderPathOption(),
                 ControllerNamespaceOption(), UseSQLliteOption(), PartialViewOption()
             };
 
@@ -529,6 +506,14 @@ namespace Microsoft.DotNet.Tools.Scaffold
             new Option<string>(
                 aliases: new[] { "-dc", "--dbContext" },
                 description: "Name of the DbContext to use, or generate (if it does not exist).")
+            {
+                IsRequired = false
+            };
+
+        private static Option DbProviderOption() =>
+            new Option<string>(
+                aliases: new[] { "-dbProvider", "--databaseProvider" },
+                description: "Database provider to use. Options include 'sqlserver' (default), 'sqlite', 'cosmos', 'postgres'.")
             {
                 IsRequired = false
             };
@@ -579,8 +564,16 @@ namespace Microsoft.DotNet.Tools.Scaffold
                 description: "Scaffolds Identity")
             {
                 // Options
-                DBContextOption(), FilesListOption(), ListFilesOption(), UserClassOption(), UseSQLliteOption(), OverwriteFilesOption(), UseDefaultUIOption(), CustomLayoutOption(),
+                DBContextOption(), DbProviderOption(), FilesListOption(), ListFilesOption(), UserClassOption(), UseSQLliteOption(), OverwriteFilesOption(), UseDefaultUIOption(), CustomLayoutOption(),
                 GenerateLayoutOption(), BootStrapVersionOption()
+            };
+
+        private static Command ScaffoldMinimalApiCommand() =>
+            new Command(
+                name: MINIMALAPI_COMMAND,
+                description: "Scaffolds Minimal API Endpoints")
+            {
+
             };
     }
 }

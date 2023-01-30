@@ -98,6 +98,12 @@
 
   <ItemGroup>
     <Compile Remove="Templates\**" />
+    <EmbeddedResource Remove="Templates\T4\Api\**" />
+    <EmbeddedResource Remove="Templates\T4\Identity\**" />
+    <EmbeddedResource Remove="Templates\T4\MVC\**" />
+    <None Remove="Templates\T4\Api\**" />
+    <None Remove="Templates\T4\Identity\**" />
+    <None Remove="Templates\T4\MVC\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -114,6 +120,30 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>IdentityDbContextGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\T4\MinimalApi\MinimalApiNoClassGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\MinimalApi\MinimalApiEfNoClassGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\MinimalApi\MinimalApiEfGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\MinimalApi\MinimalApiGenerator.Interfaces.cs" />
+    <Compile Include="Templates\T4\MinimalApi\MinimalApiNoClassGenerator.cs">
+      <DependentUpon>MinimalApiNoClassGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\MinimalApi\MinimalApiEfNoClassGenerator.cs">
+      <DependentUpon>MinimalApiEfNoClassGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\MinimalApi\MinimalApiEfGenerator.cs">
+      <DependentUpon>MinimalApiEfGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Templates\T4\MinimalApi\MinimalApiGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MinimalApiGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Templates\T4\RazorPages\Create\RazorPageCreateCshtmlGenerator.Interfaces.cs" />
     <Compile Include="Templates\T4\RazorPages\Create\RazorPageCreateGenerator.cs">
@@ -217,6 +247,22 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>IdentityDbContextGenerator.cs</LastGenOutput>
     </None>
+    <None Update="Templates\T4\MinimalApi\MinimalApiNoClassGenerator.tt">
+      <LastGenOutput>MinimalApiNoClassGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\MinimalApi\MinimalApiEfNoClassGenerator.tt">
+      <LastGenOutput>MinimalApiEfNoClassGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\MinimalApi\MinimalApiEfGenerator.tt">
+      <LastGenOutput>MinimalApiEfGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="Templates\T4\MinimalApi\MinimalApiGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>MinimalApiGenerator.cs</LastGenOutput>
+    </None>
     <None Update="Templates\T4\RazorPages\Create\RazorPageCreateGenerator.tt">
       <LastGenOutput>RazorPageCreateGenerator.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
@@ -269,13 +315,6 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Templates\T4\Api\" />
-    <Folder Include="Templates\T4\Identity\" />
-    <Folder Include="Templates\T4\MinimalApi\" />
-    <Folder Include="Templates\T4\MVC\" />
   </ItemGroup>
 
 </Project>
