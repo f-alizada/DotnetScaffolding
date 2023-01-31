@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Web.CodeGeneration.Test.Sources;
 using System.Runtime.InteropServices;
 using System.IO;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
 {

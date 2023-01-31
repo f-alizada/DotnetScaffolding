@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.DotNet.Scaffolding.Shared;
-using Microsoft.VisualStudio.Web.CodeGeneration;
-using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
-using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.Web.CodeGeneration;
+using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
+using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
 {
@@ -83,7 +84,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
                         await scaffolder.GenerateViews(razorPageGeneratorModel);
                     }
                 }
-            }    
+            }
         }
 
         private async Task GenerateCodeT4(RazorPageGeneratorModel razorPageGeneratorModel)
@@ -121,7 +122,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
                 }
             }
 
-            foreach(var razorPageTemplateToExecute in razorPageTemplatesToExecute)
+            foreach (var razorPageTemplateToExecute in razorPageTemplatesToExecute)
             {
                 var result = templateInvoker.InvokeTemplate(razorPageTemplateToExecute, dictParams);
                 string extension = Constants.CodeFileExtension;
@@ -132,7 +133,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
                 var outputPath = ValidateAndGetOutputPath(razorPageGeneratorModel, outputFileName: razorPageGeneratorModel.RazorPageName + extension);
                 using (var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(result)))
                 {
-                    await AddFileHelper(_fileSystem, outputPath, sourceStream);
+                    await CodeGeneratorHelper.AddFileHelper(_fileSystem, outputPath, sourceStream);
                 }
             }
         }

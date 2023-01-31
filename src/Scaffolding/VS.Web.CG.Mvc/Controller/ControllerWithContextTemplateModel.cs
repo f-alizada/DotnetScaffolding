@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
 using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller
 {

@@ -1,4 +1,4 @@
-set VERSION=7.0.0-dev
+set VERSION=8.0.0-dev
 set DEFAULT_NUPKG_PATH=%userprofile%/.nuget/packages
 set SRC_DIR=%cd%
 set NUPKG=artifacts/packages/Debug/Shipping/
@@ -17,7 +17,7 @@ call rd /Q /S microsoft.visualstudio.web.codegeneration.templating
 call rd /Q /S microsoft.visualstudio.web.codegeneration.utils
 call rd /Q /S microsoft.visualstudio.web.codegenerators.mvc
 
-call cd  %SRC_DIR%/%NUPKG% 
+call cd  %SRC_DIR%/%NUPKG%
 call dotnet tool install -g Microsoft.dotnet-scaffold --add-source %SRC_DIR%\%NUPKG% --version %VERSION%
 call cd %SRC_DIR%
 call taskkill /f /im dotnet.exe

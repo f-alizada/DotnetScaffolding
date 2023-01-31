@@ -9,26 +9,21 @@
 // ------------------------------------------------------------------------------
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
 {
-    using Microsoft.VisualStudio.Web.CodeGeneration.Templating;
-    using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
+    using System.Text;
     using System;
     
     /// <summary>
     /// Class to produce the template output
     /// </summary>
-    
-    #line 1 "D:\Stuff\scaffolding\src\Scaffolding\VS.Web.CG.Mvc\Templates\T4\MinimalApi\MinimalApiEfGenerator.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class MinimalApiEfGenerator : MinimalApiEfGeneratorBase
     {
-#line hidden
         /// <summary>
         /// Create the template output
         /// </summary>
         public virtual string TransformText()
         {
-            
-            #line 6 "D:\Stuff\scaffolding\src\Scaffolding\VS.Web.CG.Mvc\Templates\T4\MinimalApi\MinimalApiEfGenerator.tt"
 
     string modelName = Model.ModelType.Name;
     string modelList = $"List<{@modelName}>";
@@ -62,15 +57,255 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
     string resultsCreated = $"{resultsExtension}.Created(" + $"{@createdApiVar}" + ")";
     string builderExtensionSpaces = new string(' ', 8);
 
-            
-            #line default
-            #line hidden
+            this.Write("namespace ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(Model.EndpointsNamespace));
+            this.Write(";\r\n\r\npublic static class ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(endPointsClassName));
+            this.Write("\r\n{\r\n    public static void ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(Model.MethodName));
+            this.Write(" (this IEndpointRouteBuilder routes)\r\n    {\r\n");
+
+    if(Model.OpenAPI)
+    {
+ 
+            this.Write("    var group = routes.MapGroup(\"");
+            this.Write(this.ToStringHelper.ToStringWithCulture(routePrefix));
+            this.Write("\").WithTags(nameof(");
+            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
+            this.Write("));\r\n ");
+ }
+    else
+    {
+
+            this.Write("     var group = routes.MapGroup(\"");
+            this.Write(this.ToStringHelper.ToStringWithCulture(routePrefix));
+            this.Write("\");\r\n");
+  } 
+
+            this.Write("        group.MapGet(\"/\", async (");
+            this.Write(this.ToStringHelper.ToStringWithCulture(dbContextName));
+            this.Write(" db) =>\r\n        {\r\n            return await db.");
+            this.Write(this.ToStringHelper.ToStringWithCulture(modelToList));
+            this.Write(";\r\n        })\r\n");
+
+        string builderExtensions = $".WithName(\"{@getAllModels}\")";
+        if(Model.OpenAPI)
+        {
+            builderExtensions += $"\n{builderExtensionSpaces}.WithOpenApi()";
+        }
+        if (!Model.UseTypedResults)
+        {
+            builderExtensions += $"\n{builderExtensionSpaces}.Produces<{@modelList}>(StatusCodes.Status200OK)";
+        }
+
+            this.Write("        ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(builderExtensions));
+            this.Write(";\r\n\r\n        group.MapGet(\"/{id}\", async ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(typedTaskWithNotFound));
+            this.Write("(");
+            this.Write(this.ToStringHelper.ToStringWithCulture(primaryKeyShortTypeName));
+            this.Write(" ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(primaryKeyNameLowerCase));
+            this.Write(", ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(dbContextName));
+            this.Write(" db) =>\r\n        {\r\n            return await db.");
+            this.Write(this.ToStringHelper.ToStringWithCulture(findModel));
+            this.Write("\r\n                is ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
+            this.Write(" model \r\n                    ? ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(resultsOkModel));
+            this.Write("\r\n                    : ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(resultsNotFound));
+            this.Write(";\r\n        })\r\n");
+
+    builderExtensions = $".WithName(\"{@getModelById}\")";
+    if(Model.OpenAPI)
+    {
+        builderExtensions += $"\n{builderExtensionSpaces}.WithOpenApi()";
+    }
+    if (!Model.UseTypedResults)
+    {
+        builderExtensions += $"\n{builderExtensionSpaces}.Produces<{@modelName}>(StatusCodes.Status200OK)"; 
+        builderExtensions += $"\n{builderExtensionSpaces}.Produces(StatusCodes.Status404NotFound)";
+    }
+
+            this.Write("        ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(builderExtensions));
+            this.Write(";\r\n\r\n        group.MapPut(\"/{id}\", async ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(typedTaskWithNoContent));
+            this.Write(" (");
+            this.Write(this.ToStringHelper.ToStringWithCulture(primaryKeyShortTypeName));
+            this.Write(" ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(primaryKeyNameLowerCase));
+            this.Write(", ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
+            this.Write(" ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(Model.ModelVariable));
+            this.Write(", ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(dbContextName));
+            this.Write(" db) =>\r\n        {\r\n            var foundModel = await db.");
+            this.Write(this.ToStringHelper.ToStringWithCulture(findModel));
+            this.Write(";\r\n\r\n            if (foundModel is null)\r\n            {\r\n                return ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(resultsNotFound));
+            this.Write(";\r\n            }\r\n            \r\n            db.Update(");
+            this.Write(this.ToStringHelper.ToStringWithCulture(Model.ModelVariable));
+            this.Write(");\r\n            await db.SaveChangesAsync();\r\n\r\n            return ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(resultsNoContent));
+            this.Write(";\r\n        })\r\n");
+
+        builderExtensions = $".WithName(\"{@updateModel}\")";
+        if(Model.OpenAPI)
+        {
+            builderExtensions += $"\n{builderExtensionSpaces}.WithOpenApi()";
+        }
+        if (!Model.UseTypedResults)
+        {
+            builderExtensions += $"\n{builderExtensionSpaces}.Produces(StatusCodes.Status404NotFound)";
+            builderExtensions += $"\n{builderExtensionSpaces}.Produces(StatusCodes.Status204NoContent)";
+        }
+
+            this.Write("        ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(@builderExtensions));
+            this.Write(";\r\n\r\n        group.MapPost(\"/\", async (");
+            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
+            this.Write(" ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(Model.ModelVariable));
+            this.Write(", ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(dbContextName));
+            this.Write(" db) =>\r\n        {\r\n            db.");
+            this.Write(this.ToStringHelper.ToStringWithCulture(add));
+            this.Write(";\r\n            await db.SaveChangesAsync();\r\n            return ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(resultsCreated));
+            this.Write(";\r\n        })\r\n");
+
+        builderExtensions = $".WithName(\"{@createModel}\")";
+        if(Model.OpenAPI)
+        {
+            builderExtensions += $"\n{builderExtensionSpaces}.WithOpenApi()";
+        }
+        if(!Model.UseTypedResults)
+        {
+            builderExtensions += $"\n{builderExtensionSpaces}.Produces<{@modelName}>(StatusCodes.Status201Created)";
+        }
+
+            this.Write("        ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(builderExtensions));
+            this.Write(";\r\n\r\n        group.MapDelete(\"/{id}\", async ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(typedTaskWithNotFound));
+            this.Write(" (");
+            this.Write(this.ToStringHelper.ToStringWithCulture(primaryKeyShortTypeName));
+            this.Write(" ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(primaryKeyNameLowerCase));
+            this.Write(", ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(dbContextName));
+            this.Write(" db) =>\r\n        {\r\n            if (await db.");
+            this.Write(this.ToStringHelper.ToStringWithCulture(findModel));
+            this.Write(" is ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
+            this.Write(" ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(Model.ModelVariable));
+            this.Write(")\r\n            {\r\n                db.");
+            this.Write(this.ToStringHelper.ToStringWithCulture(remove));
+            this.Write(";\r\n                await db.SaveChangesAsync();\r\n                return ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(resultsOkModelVariable));
+            this.Write(";\r\n            }\r\n\r\n            return ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(resultsNotFound));
+            this.Write(";\r\n        })\r\n");
+
+    builderExtensions = $".WithName(\"{@deleteModel}\")";
+    if(Model.OpenAPI)
+    {
+        builderExtensions += $"\n{builderExtensionSpaces}.WithOpenApi()";
+    }
+    if (!Model.UseTypedResults)
+    {
+        builderExtensions += $"\n{builderExtensionSpaces}.Produces<{@modelName}>(StatusCodes.Status200OK)";
+        builderExtensions += $"\n{builderExtensionSpaces}.Produces(StatusCodes.Status404NotFound)";
+    }
+
+            this.Write("        ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(@builderExtensions));
+            this.Write(";\r\n    }\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
+        private global::Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost hostValue;
+        /// <summary>
+        /// The current host for the text templating engine
+        /// </summary>
+        public virtual global::Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost Host
+        {
+            get
+            {
+                return this.hostValue;
+            }
+            set
+            {
+                this.hostValue = value;
+            }
+        }
+
+private global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi.MinimalApiModel _ModelField;
+
+/// <summary>
+/// Access the Model parameter of the template.
+/// </summary>
+private global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi.MinimalApiModel Model
+{
+    get
+    {
+        return this._ModelField;
     }
-    
-    #line default
-    #line hidden
+}
+
+
+/// <summary>
+/// Initialize the template
+/// </summary>
+public virtual void Initialize()
+{
+    if ((this.Errors.HasErrors == false))
+    {
+bool ModelValueAcquired = false;
+if (this.Session.ContainsKey("Model"))
+{
+    this._ModelField = ((global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi.MinimalApiModel)(this.Session["Model"]));
+    ModelValueAcquired = true;
+}
+if ((ModelValueAcquired == false))
+{
+    string parameterValue = this.Host.ResolveParameterValue("Property", "PropertyDirectiveProcessor", "Model");
+    if ((string.IsNullOrEmpty(parameterValue) == false))
+    {
+        global::System.ComponentModel.TypeConverter tc = global::System.ComponentModel.TypeDescriptor.GetConverter(typeof(global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi.MinimalApiModel));
+        if (((tc != null) 
+                    && tc.CanConvertFrom(typeof(string))))
+        {
+            this._ModelField = ((global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi.MinimalApiModel)(tc.ConvertFrom(parameterValue)));
+            ModelValueAcquired = true;
+        }
+        else
+        {
+            this.Error("The type \'Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi.MinimalApiMode" +
+                    "l\' of the parameter \'Model\' did not match the type of the data passed to the tem" +
+                    "plate.");
+        }
+    }
+}
+if ((ModelValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("Model");
+    if ((data != null))
+    {
+        this._ModelField = ((global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi.MinimalApiModel)(data));
+    }
+}
+
+
+    }
+}
+
+
+    }
     #region Base class
     /// <summary>
     /// Base class for this transformation

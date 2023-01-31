@@ -51,7 +51,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
         if(Model.OpenAPI)
         {
     
-            this.Write("  var group = routes.MapGroup(\"");
+            this.Write("    var group = routes.MapGroup(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(routePrefix));
             this.Write("\").WithTags(nameof(");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
@@ -60,13 +60,13 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
         else
         {
     
-            this.Write("  var group = routes.MapGroup(\"");
+            this.Write("    var group = routes.MapGroup(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(routePrefix));
             this.Write("\");\r\n    ");
   }
     
-            this.Write("    \r\n\r\n        group.MapGet(\"/\", () =>\r\n        {\r\n            return new [] { n" +
-                    "ew ");
+            this.Write("    \r\n        group.MapGet(\"/\", () =>\r\n        {\r\n            return new [] { new" +
+                    " ");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelConstructor));
             this.Write(" };\r\n        })\r\n    ");
 
@@ -80,14 +80,14 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
             builderExtensions += $"\n{builderExtensionSpaces}.Produces<{modelArray}>(StatusCodes.Status200OK)";
         }
     
-            this.Write("        ");
+            this.Write("    ");
             this.Write(this.ToStringHelper.ToStringWithCulture(builderExtensions));
             this.Write(";\r\n        \r\n        group.MapGet(\"/{{id}}\", (int id) =>\r\n        {\r\n            " +
                     "//return new ");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
             this.Write(" { ID = id };\r\n        })\r\n    ");
 
-        builderExtensions = "";
+        builderExtensions = $".WithName(\"{@getModelById}\")";
         if(Model.OpenAPI)
         {
             builderExtensions += ".WithOpenApi()";
@@ -99,13 +99,13 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
     
             this.Write("    ");
             this.Write(this.ToStringHelper.ToStringWithCulture(builderExtensions));
-            this.Write("\r\n\r\n        group.MapPut(\"/{id}\", (int id, ");
+            this.Write(";\r\n\r\n        group.MapPut(\"/{id}\", (int id, ");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
             this.Write(" input) =>\r\n        {\r\n            return ");
             this.Write(this.ToStringHelper.ToStringWithCulture(resultsExtension));
             this.Write(";\r\n        })\r\n    ");
 
-        builderExtensions = "";
+        builderExtensions = $".WithName(\"{@updateModel}\")";
         if(Model.OpenAPI)
         {
             builderExtensions += ".WithOpenApi()";
@@ -115,27 +115,23 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
             builderExtensions += ".Produces(StatusCodes.Status204NoContent)";
         }
     
-            this.Write("        ");
+            this.Write("    ");
             this.Write(this.ToStringHelper.ToStringWithCulture(builderExtensions));
-            this.Write("\r\n\r\n        group.MapPost(\"/\", (");
+            this.Write(";\r\n\r\n        group.MapPost(\"/\", (");
             this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
             this.Write(" model) =>\r\n        {\r\n        ");
  if(!Model.UseTypedResults) { 
-            this.Write("            //return Results.Created(\"/");
+            this.Write("        //return Results.Created(\"/");
             this.Write(this.ToStringHelper.ToStringWithCulture(pluralModel));
             this.Write("/{model.ID}\", model);\r\n        ");
  } else { 
-            this.Write("            //return TypedResults.Created(\"/");
+            this.Write("        //return TypedResults.Created(\"/");
             this.Write(this.ToStringHelper.ToStringWithCulture(pluralModel));
             this.Write("/{model.ID}\", model);\r\n        ");
  } 
-            this.Write("        }).WithName(\"");
-            this.Write(this.ToStringHelper.ToStringWithCulture(updateModel));
-            this.Write("\")\r\n        ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(builderExtensions));
-            this.Write("\r\n\r\n    ");
+            this.Write("    })\r\n    ");
 
-        builderExtensions = "";
+        builderExtensions = $".WithName(\"{@createModel}\")";
         if(Model.OpenAPI)
         {
             builderExtensions += ".WithOpenApi()";
@@ -145,23 +141,21 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
             builderExtensions += ".Produces<" + modelName + ">(StatusCodes.Status201Created)";
         }
     
-            this.Write("        group.MapDelete(\"/{id}\", (int id) =>\r\n        {\r\n            ");
- if(!Model.UseTypedResults) { 
-            this.Write("                //return Results.Ok(new ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
-            this.Write("{ ID = id });\r\n            ");
- } else { 
-            this.Write("                //return TypedResults.Ok(new ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
-            this.Write(" { ID = id });\r\n            ");
- } 
-            this.Write("        }).WithName(\"");
-            this.Write(this.ToStringHelper.ToStringWithCulture(createModel));
-            this.Write("\")\r\n        ");
+            this.Write("    ");
             this.Write(this.ToStringHelper.ToStringWithCulture(builderExtensions));
-            this.Write("\r\n\r\n    ");
+            this.Write(";\r\n\r\n        group.MapDelete(\"/{id}\", (int id) =>\r\n        {\r\n    ");
+ if(!Model.UseTypedResults) { 
+            this.Write("        //return Results.Ok(new ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
+            this.Write("{ ID = id });\r\n    ");
+ } else { 
+            this.Write("        //return TypedResults.Ok(new ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
+            this.Write(" { ID = id });\r\n    ");
+ } 
+            this.Write("    })\r\n    ");
 
-        builderExtensions = "";
+        builderExtensions = $".WithName(\"{@deleteModel}\")";
         if(Model.OpenAPI)
         {
             builderExtensions += ".WithOpenApi()";
@@ -171,17 +165,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
             builderExtensions += ".Produces<" + modelName + ">(StatusCodes.Status200OK)";
         }
     
-            this.Write("        group.MapDelete(\"/{id}\", (int id) =>\r\n        {\r\n            ");
- if(!Model.UseTypedResults) { 
-            this.Write("                //return Results.Ok(new ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
-            this.Write(" { ID = id });\r\n            ");
- } else { 
-            this.Write("                //return TypedResults.Ok(new ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(modelName));
-            this.Write("\r\n            ");
- } 
-            this.Write("    }\r\n}\r\n");
+            this.Write("    ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(builderExtensions));
+            this.Write(";\r\n    }\r\n}\r\n");
 
     StringBuilder mainEnvironment = GenerationEnvironment;
     GenerationEnvironment = new StringBuilder();

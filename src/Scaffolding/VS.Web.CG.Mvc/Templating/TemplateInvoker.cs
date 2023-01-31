@@ -1,14 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using Microsoft.VisualStudio.TextTemplating;
-using System.Reflection;
-using Mono.TextTemplating;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.RazorPages;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
 {
@@ -82,7 +75,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
             {
                 //throw new OperationException(DesignStrings.ErrorGeneratingOutput(transformation.GetType().Name));
             }
-             
+
             return output;
         }
 

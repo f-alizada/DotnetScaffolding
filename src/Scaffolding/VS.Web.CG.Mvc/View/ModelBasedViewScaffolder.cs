@@ -10,6 +10,7 @@ using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View
 {

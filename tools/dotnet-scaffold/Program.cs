@@ -352,6 +352,14 @@ namespace Microsoft.DotNet.Tools.Scaffold
                 IsRequired = false
             };
 
+        private static Option EndpointsClassOption() =>
+            new Option<string>(
+                aliases: new[] { "--endpoints", "-e" },
+                description: "Endpoints class to use. (not file name)")
+            {
+                IsRequired = true
+            };
+
         private static Option BootStrapVersionOption() =>
             new Option<string>(
                 aliases: new[] { "-b", "--bootstrapVersion" },
@@ -573,7 +581,7 @@ namespace Microsoft.DotNet.Tools.Scaffold
                 name: MINIMALAPI_COMMAND,
                 description: "Scaffolds Minimal API Endpoints")
             {
-
+                ModelClassOption(), DataContextOption(), EndpointsClassOption()
             };
     }
 }

@@ -27,14 +27,13 @@ public static class <#= endPointsClassName #>
     <#
         if(Model.OpenAPI)
         {
-    #>  var group = routes.MapGroup("<#= routePrefix #>").WithTags(nameof(<#= modelName #>));
+    #>    var group = routes.MapGroup("<#= routePrefix #>").WithTags(nameof(<#= modelName #>));
     <#  }
         else
         {
-    #>  var group = routes.MapGroup("<#= routePrefix #>");
+    #>    var group = routes.MapGroup("<#= routePrefix #>");
     <#  }
     #>    
-
         group.MapGet("/", () =>
         {
             return new [] { new <#= modelConstructor #> };
@@ -50,14 +49,14 @@ public static class <#= endPointsClassName #>
             builderExtensions += $"\n{builderExtensionSpaces}.Produces<{modelArray}>(StatusCodes.Status200OK)";
         }
     #>
-        <#= builderExtensions #>;
+    <#= builderExtensions #>;
         
         group.MapGet("/{{id}}", (int id) =>
         {
             //return new <#= modelName #> { ID = id };
         })
     <#
-        builderExtensions = "";
+        builderExtensions = $".WithName(\"{@getModelById}\")";
         if(Model.OpenAPI)
         {
             builderExtensions += ".WithOpenApi()";
@@ -67,14 +66,14 @@ public static class <#= endPointsClassName #>
             builderExtensions += ".Produces<" + modelName + ">(StatusCodes.Status200OK)";
         }
     #>
-    <#= builderExtensions #>
+    <#= builderExtensions #>;
 
         group.MapPut("/{id}", (int id, <#= modelName #> input) =>
         {
             return <#= resultsExtension #>;
         })
     <#
-        builderExtensions = "";
+        builderExtensions = $".WithName(\"{@updateModel}\")";
         if(Model.OpenAPI)
         {
             builderExtensions += ".WithOpenApi()";
@@ -84,20 +83,18 @@ public static class <#= endPointsClassName #>
             builderExtensions += ".Produces(StatusCodes.Status204NoContent)";
         }
     #>
-        <#= builderExtensions #>
+    <#= builderExtensions #>;
 
         group.MapPost("/", (<#= modelName #> model) =>
         {
         <# if(!Model.UseTypedResults) { #>
-            //return Results.Created("/<#= pluralModel #>/{model.ID}", model);
+        //return Results.Created("/<#= pluralModel #>/{model.ID}", model);
         <# } else { #>
-            //return TypedResults.Created("/<#= pluralModel #>/{model.ID}", model);
+        //return TypedResults.Created("/<#= pluralModel #>/{model.ID}", model);
         <# } #>
-        }).WithName("<#= updateModel #>")
-        <#= builderExtensions #>
-
+    })
     <#
-        builderExtensions = "";
+        builderExtensions = $".WithName(\"{@createModel}\")";
         if(Model.OpenAPI)
         {
             builderExtensions += ".WithOpenApi()";
@@ -107,18 +104,18 @@ public static class <#= endPointsClassName #>
             builderExtensions += ".Produces<" + modelName + ">(StatusCodes.Status201Created)";
         }
     #>
+    <#= builderExtensions #>;
+
         group.MapDelete("/{id}", (int id) =>
         {
-            <# if(!Model.UseTypedResults) { #>
-                //return Results.Ok(new <#= modelName #>{ ID = id });
-            <# } else { #>
-                //return TypedResults.Ok(new <#= modelName #> { ID = id });
-            <# } #>
-        }).WithName("<#= createModel #>")
-        <#= builderExtensions #>
-
+    <# if(!Model.UseTypedResults) { #>
+        //return Results.Ok(new <#= modelName #>{ ID = id });
+    <# } else { #>
+        //return TypedResults.Ok(new <#= modelName #> { ID = id });
+    <# } #>
+    })
     <#
-        builderExtensions = "";
+        builderExtensions = $".WithName(\"{@deleteModel}\")";
         if(Model.OpenAPI)
         {
             builderExtensions += ".WithOpenApi()";
@@ -128,13 +125,7 @@ public static class <#= endPointsClassName #>
             builderExtensions += ".Produces<" + modelName + ">(StatusCodes.Status200OK)";
         }
     #>
-        group.MapDelete("/{id}", (int id) =>
-        {
-            <# if(!Model.UseTypedResults) { #>
-                //return Results.Ok(new <#= modelName #> { ID = id });
-            <# } else { #>
-                //return TypedResults.Ok(new <#= modelName #>
-            <# } #>
+    <#= builderExtensions #>;
     }
 }
 <#

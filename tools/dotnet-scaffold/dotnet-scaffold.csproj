@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Scaffolding tool for .NET projects. Contains the dotnet-scaffold command used for generating areas, views, controllers, identity pages etc. </Description>
     <TargetFramework>net7.0</TargetFramework>
@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <None Pack="true" Include="$(RepoRoot)\src\Scaffolding\VS.Web.CG.Mvc\Templates\T4\RazorPages\**" CopyToPublishDirectory="Always" LinkBase="Templates\T4\RazorPages\" />
+    <None Pack="true" Include="$(RepoRoot)\src\Scaffolding\VS.Web.CG.Mvc\Templates\T4\MinimalApi\**" CopyToPublishDirectory="Always" LinkBase="Templates\T4\MinimalApi\" />
   </ItemGroup>
 </Project>
 

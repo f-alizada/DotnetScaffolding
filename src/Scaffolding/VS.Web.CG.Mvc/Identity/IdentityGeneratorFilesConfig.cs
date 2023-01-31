@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.Web.CodeGeneration;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity
 {

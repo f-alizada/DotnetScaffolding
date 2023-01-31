@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.VisualStudio.Web.CodeGeneration;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
 {
-    internal static class  T4TemplateHelper
+    internal static class T4TemplateHelper
     {
         public static IEnumerable<string> GetTemplateFoldersT4(string appBasePath, string baseFolder, IProjectContext projectContext)
         {
@@ -34,9 +36,20 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
             return razorPages;
         }
 
+        public static IList<string> GetAllMinimalEndpointsT4(string appBasePath, IProjectContext projectContext)
+        {
+            var minimalEndpointTemplates = new List<string>();
+            var minimalEndpointTemplatesFolder = GetTemplateFoldersT4(appBasePath, Path.Combine("T4", "MinimalApi"), projectContext)?.FirstOrDefault();
+            if (Directory.Exists(minimalEndpointTemplatesFolder))
+            {
+                minimalEndpointTemplates = Directory.EnumerateFiles(minimalEndpointTemplatesFolder, "*.tt", SearchOption.AllDirectories).ToList();
+            }
+            return minimalEndpointTemplates;
+        }
+
         public static IList<string> RazorPageTemplates = new List<string>()
         {
-            "Empty", "Create","List", "Details", "Delete", "Edit" 
+            "Empty", "Create","List", "Details", "Delete", "Edit"
         };
 
         public static ITextTransformation CreateT4Generator(IServiceProvider serviceProvider, string templatePath)
@@ -61,7 +74,11 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
             {
                 contextTemplate = CreateT4RazorPageTemplate(host, templateName);
             }
-            
+            else if (templateName.StartsWith("minimalapi", StringComparison.OrdinalIgnoreCase))
+            {
+                contextTemplate = CreateT4MinimalApiTemplate(host, templateName);
+            }
+
             contextTemplate.Session = host.CreateSession();
 
             return contextTemplate;
@@ -129,6 +146,20 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
                 contextTemplate = new RazorPageCreateCshtmlGenerator { Host = host };
             }
 
+            return contextTemplate;
+        }
+
+        private static ITextTransformation CreateT4MinimalApiTemplate(TextTemplatingEngineHost host, string templateName)
+        {
+            ITextTransformation contextTemplate = null;
+            if (templateName.Equals(nameof(MinimalApiGenerator), StringComparison.OrdinalIgnoreCase))
+            {
+                contextTemplate = new MinimalApiGenerator { Host = host };
+            }
+            else if (templateName.Equals(nameof(MinimalApiEfGenerator), StringComparison.OrdinalIgnoreCase))
+            {
+                contextTemplate = new MinimalApiEfGenerator { Host = host };
+            }
             return contextTemplate;
         }
     }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller

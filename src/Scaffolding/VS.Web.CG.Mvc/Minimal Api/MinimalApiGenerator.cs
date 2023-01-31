@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -19,7 +20,8 @@ using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating;
 using ConsoleLogger = Microsoft.DotNet.MSIdentity.Shared.ConsoleLogger;
 
 namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
@@ -33,7 +35,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
         private IModelTypesLocator ModelTypesLocator { get; set; }
         private IFileSystem FileSystem { get; set; }
         private IProjectContext ProjectContext { get; set; }
-        private IEntityFrameworkService EntityFrameworkService { get; set;}
+        private IEntityFrameworkService EntityFrameworkService { get; set; }
         private ICodeGeneratorActionsService CodeGeneratorActionsService { get; set; }
         private Workspace Workspace { get; set; }
         private ConsoleLogger ConsoleLogger { get; set; }
@@ -75,7 +77,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
                 EntityFrameworkService,
                 ModelTypesLocator,
                 Logger,
-                areaName : string.Empty);
+                areaName: string.Empty);
 
             if (!string.IsNullOrEmpty(modelTypeAndContextModel.DbContextFullName) && CalledFromCommandline)
             {
@@ -86,7 +88,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
             {
                 ValidateOpenApiDependencies(ProjectContext.PackageDependencies);
             }
-            
+
             var templateModel = new MinimalApiModel(modelTypeAndContextModel.ModelType, modelTypeAndContextModel.DbContextFullName, model.EndpintsClassName)
             {
                 EndpointsName = model.EndpintsClassName,
@@ -104,7 +106,31 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
 
             if (model.T4Templating)
             {
-                await GenerateCodeT4(model);
+                System.Diagnostics.Debugger.Launch();
+                //endpoints file exists, use CodeAnalysis to add required clauses.
+                if (FileSystem.FileExists(endpointsFilePath))
+                {
+                }
+                else
+                {
+                    //Add endpoints file with endpoints class since it does not exist.
+                    ValidateModel(model);
+                    var minimalApiTemplates = T4TemplateHelper.GetAllMinimalEndpointsT4(AppInfo.ApplicationBasePath, ProjectContext);
+                    TemplateInvoker templateInvoker = new TemplateInvoker(ServiceProvider);
+                    var dictParams = new Dictionary<string, object>()
+                    {
+                        { "Model" , templateModel }
+                    };
+                    var result = templateInvoker.InvokeTemplate(minimalApiTemplates.First(x => x.Contains("MinimalApiGenerator.tt")), dictParams);
+                    using (var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(result)))
+                    {
+                        await CodeGeneratorHelper.AddFileHelper(FileSystem, endpointsFilePath, sourceStream);
+                    }
+
+                    Logger.LogMessage(string.Format(MessageStrings.AddedController, endpointsFilePath.Substring(AppInfo.ApplicationBasePath.Length)));
+                    //add app.Map statement to Program.cs
+                    await ModifyProgramCs(templateModel);
+                }
             }
             //older razor templating
             else
@@ -187,7 +213,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
                     {
                         usings.Add("Microsoft.AspNetCore.Http.HttpResults");
                     }
-                    var endpointsCodeFile = new CodeFile { Usings = usings.ToArray()};
+                    var endpointsCodeFile = new CodeFile { Usings = usings.ToArray() };
                     var docBuilder = new DocumentBuilder(docEditor, endpointsCodeFile, ConsoleLogger);
                     var newRoot = docBuilder.AddUsings(new CodeChangeOptions());
                     var classNode = newRoot.DescendantNodes().FirstOrDefault(node => node is ClassDeclarationSyntax classDeclarationSyntax && classDeclarationSyntax.Identifier.ValueText.Contains(className));
@@ -205,7 +231,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
                             classDeclaration = SyntaxFactory.ClassDeclaration($"{templateModel.ModelType.Name}Endpoints")
                                 .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword)))
                                 .NormalizeWhitespace()
-                                .WithLeadingTrivia(SyntaxFactory.CarriageReturnLineFeed, SyntaxFactory.CarriageReturnLineFeed);  
+                                .WithLeadingTrivia(SyntaxFactory.CarriageReturnLineFeed, SyntaxFactory.CarriageReturnLineFeed);
                         }
                         var modifiedClass = classDeclaration.AddMembers(
                             SyntaxFactory.GlobalStatement(SyntaxFactory.ParseStatement(membersBlockText)).WithLeadingTrivia(SyntaxFactory.Tab));
@@ -221,7 +247,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
                         {
                             newRoot = newRoot.ReplaceNode(classNode, modifiedClass);
                         }
-                        
+
                         docEditor.ReplaceNode(docRoot, newRoot);
                         var classFileSourceTxt = await docEditor.GetChangedDocument()?.GetTextAsync();
                         var classFileTxt = classFileSourceTxt?.ToString();
@@ -332,7 +358,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
                             newRoot = newRoot?.ReplaceNode(mainMethod.Body, updatedMethod);
                         }
                     }
-                                        
+
                     if (templateModel.OpenAPI)
                     {
                         var builderVariable = ProjectModifierHelper.GetBuilderVariableIdentifierTransformation(newRoot.Members);
@@ -345,7 +371,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
                             {
                                 filteredChanges = DocumentBuilder.AddLeadingTriviaSpaces(filteredChanges, spaces: 12);
                                 var mainMethod = DocumentBuilder.GetMethodFromSyntaxRoot(newRoot, Main);
-                                { 
+                                {
                                     var updatedMethod = DocumentBuilder.ApplyChangesToMethod(mainMethod.Body, filteredChanges);
                                     newRoot = newRoot?.ReplaceNode(mainMethod.Body, updatedMethod);
                                 }
@@ -398,11 +424,6 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
                 throw new InvalidOperationException(
                     string.Format(MessageStrings.InstallPackagesForScaffoldingIdentity, string.Join(",", missingPackages)));
             }
-        }
-
-        private Task GenerateCodeT4(MinimalApiGeneratorCommandLineModel viewGeneratorModel)
-        {
-            throw new NotImplementedException(string.Format(MessageStrings.T4TemplatingNotSupported, nameof(MinimalApi)));
         }
 
         private string GetMinimalApiCodeModifierConfig()

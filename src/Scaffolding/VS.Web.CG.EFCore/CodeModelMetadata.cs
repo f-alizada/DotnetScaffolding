@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -32,7 +32,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
 
         public CodeModelMetadata(Type model)
         {
-            if(model == null)
+            if (model == null)
             {
                 throw new ArgumentNullException(nameof(model));
             }
@@ -79,13 +79,15 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
         {
             get
             {
-                if(_properties == null)
+                if (_properties == null)
                 {
                     _properties = GetBindableProperties(_model);
                 }
                 return _properties;
             }
         }
+
+        public string EntitySetName { get; private set; }
 
         private IPropertyMetadata[] GetBindableProperties(Type _model)
         {
@@ -95,12 +97,12 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
 
         private bool IsBindable(PropertyInfo propertyInfo)
         {
-            if(propertyInfo == null)
+            if (propertyInfo == null)
             {
                 return false;
             }
 
-            if(TypeUtilities.IsTypePrimitive(propertyInfo.PropertyType) || bindableNonPrimitiveTypes.Any(bindable => bindable == propertyInfo.PropertyType))
+            if (TypeUtilities.IsTypePrimitive(propertyInfo.PropertyType) || bindableNonPrimitiveTypes.Any(bindable => bindable == propertyInfo.PropertyType))
             {
                 return true;
             }

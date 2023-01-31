@@ -1,7 +1,7 @@
-/*namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
+namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi
 {
-    internal class MinimalApiEfGenerator : ITextTransformation
+    public partial class MinimalApiEfGenerator : ITextTransformation
     {
     }
 }
-*/
+
