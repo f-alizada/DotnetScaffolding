@@ -20,6 +20,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common
         public const string ViewExtension = ".cshtml";
         public const string CodeFileExtension = ".cs";
         public const string RazorTemplateExtension = ".cshtml";
+        public const string T4TemplateExtension = ".tt";
 
         public static readonly string ThisAssemblyName = typeof(Constants).GetTypeInfo().Assembly.GetName().Name;
 
@@ -30,9 +31,9 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common
         public const string MvcEmptyControllerTemplate = "EmptyController.cshtml";
         public const string MvcControllerWithActionsTemplate = "ControllerWithActions.cshtml";
         public const string MvcControllerWithContextTemplate = "MvcControllerWithContext.cshtml";
-        public const string MinimalApiTemplate = "MinimalApi.cshtml";
-        public const string MinimalApiEfTemplate = "MinimalApiEf.cshtml";
-        public const string MinimalApiNoClassTemplate = "MinimalApiNoClass.cshtml";
-        public const string MinimalApiEfNoClassTemplate = "MinimalApiEfNoClass.cshtml";
+        public const string MinimalApiTemplate = "MinimalApi";
+        public const string MinimalApiEfTemplate = "MinimalApiEf";
+        public const string MinimalApiNoClassTemplate = "MinimalApiNoClass";
+        public const string MinimalApiEfNoClassTemplate = "MinimalApiEfNoClass";
     }
 }

@@ -104,61 +104,62 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
             var endpointsModel = ModelTypesLocator.GetAllTypes().FirstOrDefault(t => t.Name.Equals(model.EndpintsClassName));
             var endpointsFilePath = endpointsModel?.TypeSymbol?.Locations.FirstOrDefault()?.SourceTree?.FilePath ?? ValidateAndGetOutputPath(model);
 
-            if (model.T4Templating)
+            System.Diagnostics.Debugger.Launch();
+
+            //endpoints file exists, use CodeAnalysis to add required clauses.
+            if (FileSystem.FileExists(endpointsFilePath))
             {
-                System.Diagnostics.Debugger.Launch();
-                //endpoints file exists, use CodeAnalysis to add required clauses.
-                if (FileSystem.FileExists(endpointsFilePath))
+                //get method block with the api endpoints.
+                string membersBlockText = string.Empty;
+                if (model.T4Templating)
                 {
+
                 }
+                //older razor templating
                 else
                 {
-                    //Add endpoints file with endpoints class since it does not exist.
-                    ValidateModel(model);
+                    membersBlockText = await CodeGeneratorActionsService.ExecuteTemplate(GetTemplateName(model, existingEndpointsFile: true), TemplateFolders, templateModel);
+                }
+
+
+                var className = model.EndpintsClassName;
+                await AddEndpointsMethod(membersBlockText, endpointsFilePath, className, templateModel);
+
+                if (modelTypeAndContextModel?.ContextProcessingResult?.ContextProcessingStatus == ContextProcessingStatus.ContextAddedButRequiresConfig)
+                {
+                    throw new Exception(string.Format("{0} {1}", MessageStrings.ScaffoldingSuccessful_unregistered,
+                        MessageStrings.Scaffolding_additionalSteps));
+                }
+            }
+            //execute CodeGeneratorActionsService.AddFileFromTemplateAsync to add endpoints file.
+            else
+            {
+                //Add endpoints file with endpoints class since it does not exist.
+                ValidateModel(model);
+                if (model.T4Templating)
+                {
                     var minimalApiTemplates = T4TemplateHelper.GetAllMinimalEndpointsT4(AppInfo.ApplicationBasePath, ProjectContext);
                     TemplateInvoker templateInvoker = new TemplateInvoker(ServiceProvider);
                     var dictParams = new Dictionary<string, object>()
                     {
                         { "Model" , templateModel }
                     };
-                    var result = templateInvoker.InvokeTemplate(minimalApiTemplates.First(x => x.Contains("MinimalApiGenerator.tt")), dictParams);
+
+                    var result = templateInvoker.InvokeTemplate(minimalApiTemplates.First(x => x.Contains(GetTemplateName(model, existingEndpointsFile: false))), dictParams);
                     using (var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(result)))
                     {
                         await CodeGeneratorHelper.AddFileHelper(FileSystem, endpointsFilePath, sourceStream);
                     }
-
-                    Logger.LogMessage(string.Format(MessageStrings.AddedController, endpointsFilePath.Substring(AppInfo.ApplicationBasePath.Length)));
-                    //add app.Map statement to Program.cs
-                    await ModifyProgramCs(templateModel);
                 }
-            }
-            //older razor templating
-            else
-            {
-                //endpoints file exists, use CodeAnalysis to add required clauses.
-                if (FileSystem.FileExists(endpointsFilePath))
-                {
-                    //get method block with the api endpoints.
-                    string membersBlockText = await CodeGeneratorActionsService.ExecuteTemplate(GetTemplateName(model, existingEndpointsFile: true), TemplateFolders, templateModel);
-                    var className = model.EndpintsClassName;
-                    await AddEndpointsMethod(membersBlockText, endpointsFilePath, className, templateModel);
-
-                    if (modelTypeAndContextModel?.ContextProcessingResult?.ContextProcessingStatus == ContextProcessingStatus.ContextAddedButRequiresConfig)
-                    {
-                        throw new Exception(string.Format("{0} {1}", MessageStrings.ScaffoldingSuccessful_unregistered,
-                            MessageStrings.Scaffolding_additionalSteps));
-                    }
-                }
-                //execute CodeGeneratorActionsService.AddFileFromTemplateAsync to add endpoints file.
+                //older razor templating
                 else
                 {
-                    //Add endpoints file with endpoints class since it does not exist.
-                    ValidateModel(model);
                     await CodeGeneratorActionsService.AddFileFromTemplateAsync(endpointsFilePath, GetTemplateName(model, existingEndpointsFile: false), TemplateFolders, templateModel);
-                    Logger.LogMessage(string.Format(MessageStrings.AddedController, endpointsFilePath.Substring(AppInfo.ApplicationBasePath.Length)));
-                    //add app.Map statement to Program.cs
-                    await ModifyProgramCs(templateModel);
                 }
+
+                Logger.LogMessage(string.Format(MessageStrings.AddedController, endpointsFilePath.Substring(AppInfo.ApplicationBasePath.Length)));
+                //add app.Map statement to Program.cs
+                await ModifyProgramCs(templateModel);
             }
         }
 
@@ -265,14 +266,16 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
 
         internal static string GetTemplateName(MinimalApiGeneratorCommandLineModel model, bool existingEndpointsFile)
         {
+            string templateNameWithoutExtension = string.Empty;
             if (existingEndpointsFile)
             {
-                return string.IsNullOrEmpty(model.DataContextClass) ? Constants.MinimalApiNoClassTemplate : Constants.MinimalApiEfNoClassTemplate;
+                templateNameWithoutExtension = string.IsNullOrEmpty(model.DataContextClass) ? Constants.MinimalApiNoClassTemplate : Constants.MinimalApiEfNoClassTemplate;
             }
             else
             {
-                return string.IsNullOrEmpty(model.DataContextClass) ? Constants.MinimalApiTemplate : Constants.MinimalApiEfTemplate;
+                templateNameWithoutExtension = string.IsNullOrEmpty(model.DataContextClass) ? Constants.MinimalApiTemplate : Constants.MinimalApiEfTemplate;
             }
+            return templateNameWithoutExtension + (model.T4Templating ? Constants.T4TemplateExtension : Constants.RazorTemplateExtension);
         }
 
         //Validates  endpoints class  and namespace name when creating a new file/class.
