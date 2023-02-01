@@ -1,15 +1,12 @@
-using System;
+/*using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
-using Microsoft.DotNet.Scaffolding.Shared.T4.Templating;
-using Microsoft.VisualStudio.Web.CodeGeneration;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4.MinimalApi;
 
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
+namespace Microsoft.DotNet.Scaffolding.Shared.T4.Templating
 {
     internal static class T4TemplateHelper
     {
@@ -59,12 +56,10 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
             {
                 return null;
             }
-
             var host = new TextTemplatingEngineHost(serviceProvider)
             {
                 TemplateFile = templatePath
             };
-
             ITextTransformation contextTemplate = null;
 
             string templateName = Path.GetFileNameWithoutExtension(templatePath);
@@ -167,3 +162,4 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
         }
     }
 }
+*/

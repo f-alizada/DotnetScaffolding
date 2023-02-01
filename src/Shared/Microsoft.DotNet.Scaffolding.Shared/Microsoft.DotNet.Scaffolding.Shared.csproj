@@ -21,10 +21,14 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Features" Version="$(CodeAnalysisVersion)" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Features" Version="$(CodeAnalysisVersion)" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="$(CodeAnalysisVersion)" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="$(CodeAnalysisVersion)" />
-    
-    
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="$(CodeAnalysisVersion)" />    
     <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CodeDom" Version="7.0.0-rc.1.22426.10" />
+    <PackageReference Include="Mono.TextTemplating" Version="2.2.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0-preview.3.22175.4" />
   </ItemGroup>
   
   <ItemGroup>
@@ -32,6 +36,96 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>MessageStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="T4\Templates\DataContext\DataContextGenerator.cs">
+      <DependentUpon>DataContextGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\DataContext\IdentityDbContextGenerator.cs">
+      <DependentUpon>IdentityDbContextGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\MinimalApi\MinimalApiEfGenerator.cs">
+      <DependentUpon>MinimalApiEfGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\MinimalApi\MinimalApiEfNoClassGenerator.cs">
+      <DependentUpon>MinimalApiEfNoClassGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\MinimalApi\MinimalApiGenerator.cs">
+      <DependentUpon>MinimalApiGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\MinimalApi\MinimalApiNoClassGenerator.cs">
+      <DependentUpon>MinimalApiNoClassGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\Create\RazorPageCreateCshtmlGenerator.cs">
+      <DependentUpon>RazorPageCreateCshtmlGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\Create\RazorPageCreateGenerator.cs">
+      <DependentUpon>RazorPageCreateGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\Delete\RazorPageDeleteCshtmlGenerator.cs">
+      <DependentUpon>RazorPageDeleteCshtmlGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\Delete\RazorPageDeleteGenerator.cs">
+      <DependentUpon>RazorPageDeleteGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\Details\RazorPageDetailsCshtmlGenerator.cs">
+      <DependentUpon>RazorPageDetailsCshtmlGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\Details\RazorPageDetailsGenerator.cs">
+      <DependentUpon>RazorPageDetailsGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\Edit\RazorPageEditCshtmlGenerator.cs">
+      <DependentUpon>RazorPageEditCshtmlGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\Edit\RazorPageEditGenerator.cs">
+      <DependentUpon>RazorPageEditGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\Empty\RazorPageEmptyCshtmlGenerator.cs">
+      <DependentUpon>RazorPageEmptyCshtmlGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\Empty\RazorPageEmptyGenerator.cs">
+      <DependentUpon>RazorPageEmptyGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\List\RazorPageListCshtmlGenerator.cs">
+      <DependentUpon>RazorPageListCshtmlGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="T4\Templates\RazorPages\List\RazorPageListGenerator.cs">
+      <DependentUpon>RazorPageListGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
 
@@ -44,6 +138,85 @@
 
   <ItemGroup>
     <EmbeddedResource Include="$(RepoRoot)\tools\dotnet-aspnet-codegenerator\compiler\resources\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="T4\Templates\DataContext\DataContextGenerator.tt">
+      <LastGenOutput>DataContextGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\DataContext\IdentityDbContextGenerator.tt">
+      <LastGenOutput>IdentityDbContextGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\MinimalApi\MinimalApiEfGenerator.tt">
+      <LastGenOutput>MinimalApiEfGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\MinimalApi\MinimalApiEfNoClassGenerator.tt">
+      <LastGenOutput>MinimalApiEfNoClassGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\MinimalApi\MinimalApiGenerator.tt">
+      <LastGenOutput>MinimalApiGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\MinimalApi\MinimalApiNoClassGenerator.tt">
+      <LastGenOutput>MinimalApiNoClassGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\Create\RazorPageCreateCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageCreateCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\Create\RazorPageCreateGenerator.tt">
+      <LastGenOutput>RazorPageCreateGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\Delete\RazorPageDeleteCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageDeleteCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\Delete\RazorPageDeleteGenerator.tt">
+      <LastGenOutput>RazorPageDeleteGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\Details\RazorPageDetailsCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageDetailsCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\Details\RazorPageDetailsGenerator.tt">
+      <LastGenOutput>RazorPageDetailsGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\Edit\RazorPageEditCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageEditCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\Edit\RazorPageEditGenerator.tt">
+      <LastGenOutput>RazorPageEditGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\Empty\RazorPageEmptyCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageEmptyCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\Empty\RazorPageEmptyGenerator.tt">
+      <LastGenOutput>RazorPageEmptyGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\List\RazorPageListCshtmlGenerator.tt">
+      <LastGenOutput>RazorPageListCshtmlGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <None Update="T4\Templates\RazorPages\List\RazorPageListGenerator.tt">
+      <LastGenOutput>RazorPageListGenerator.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
   
 </Project>

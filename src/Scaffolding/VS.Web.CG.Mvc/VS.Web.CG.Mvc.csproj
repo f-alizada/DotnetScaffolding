@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Code Generators for ASP.NET Core MVC. Contains code generators for MVC Controllers and Views.</Description>
@@ -111,16 +111,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Templates\T4\DataContext\DataContextGenerator.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DataContextGenerator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Templates\T4\DataContext\IdentityDbContextGenerator.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>IdentityDbContextGenerator.tt</DependentUpon>
-    </Compile>
     <Compile Include="Templates\T4\MinimalApi\MinimalApiNoClassGenerator.Interfaces.cs" />
     <Compile Include="Templates\T4\MinimalApi\MinimalApiEfNoClassGenerator.Interfaces.cs" />
     <Compile Include="Templates\T4\MinimalApi\MinimalApiEfGenerator.Interfaces.cs" />
@@ -218,9 +208,7 @@
   <ItemGroup>
     <ProjectReference Include="$(RepoRoot)\src\Scaffolding\VS.Web.CG\VS.Web.CG.csproj" />
     <ProjectReference Include="$(RepoRoot)\src\Shared\Microsoft.DotNet.Scaffolding.Shared\Microsoft.DotNet.Scaffolding.Shared.csproj" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0-preview.3.22175.4" />
-    <PackageReference Include="System.CodeDom" Version="7.0.0-rc.1.22426.10" />
-    <PackageReference Include="Mono.TextTemplating" Version="2.2.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -239,14 +227,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Templates\T4\DataContext\DataContextGenerator.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>DataContextGenerator.cs</LastGenOutput>
-    </None>
-    <None Update="Templates\T4\DataContext\IdentityDbContextGenerator.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>IdentityDbContextGenerator.cs</LastGenOutput>
-    </None>
     <None Update="Templates\T4\MinimalApi\MinimalApiNoClassGenerator.tt">
       <LastGenOutput>MinimalApiNoClassGenerator.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>

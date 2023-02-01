@@ -1,7 +1,6 @@
-using System;
 using System.Globalization;
 
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
+namespace Microsoft.DotNet.Scaffolding.Shared.T4.Templating
 {
     /// <summary>
     /// Contains information about errors resulted in running a
@@ -41,7 +40,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
         /// </summary>
         public override string ToString()
         {
-            return String.Format(CultureInfo.CurrentCulture, "ABCD", Message, LineNumber, ColumnNumber);
+            return string.Format(CultureInfo.CurrentCulture, "ABCD", Message, LineNumber, ColumnNumber);
         }
     }
 }

@@ -2,7 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 // ReSharper disable once CheckNamespace
-namespace System.Runtime.Remoting.Messaging
+
+namespace Microsoft.DotNet.Scaffolding.Shared.T4.Templating
 {
     internal sealed class CallContext
     {

@@ -16,6 +16,7 @@ using Microsoft.DotNet.Scaffolding.Shared.CodeModifier;
 using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
+using Microsoft.DotNet.Scaffolding.Shared.T4.Templating;
 using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
@@ -104,7 +105,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
             var endpointsModel = ModelTypesLocator.GetAllTypes().FirstOrDefault(t => t.Name.Equals(model.EndpintsClassName));
             var endpointsFilePath = endpointsModel?.TypeSymbol?.Locations.FirstOrDefault()?.SourceTree?.FilePath ?? ValidateAndGetOutputPath(model);
 
-            System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Launch();
 
             //endpoints file exists, use CodeAnalysis to add required clauses.
             if (FileSystem.FileExists(endpointsFilePath))
@@ -139,13 +140,15 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
                 if (model.T4Templating)
                 {
                     var minimalApiTemplates = T4TemplateHelper.GetAllMinimalEndpointsT4(AppInfo.ApplicationBasePath, ProjectContext);
+                    var minimalApiTemplatePath = minimalApiTemplates.First(x => x.Contains(GetTemplateName(model, existingEndpointsFile: false)));
+                    var minimalApiT4Generator = T4TemplateHelper.CreateT4Generator(ServiceProvider, minimalApiTemplatePath);
                     TemplateInvoker templateInvoker = new TemplateInvoker(ServiceProvider);
                     var dictParams = new Dictionary<string, object>()
                     {
                         { "Model" , templateModel }
                     };
 
-                    var result = templateInvoker.InvokeTemplate(minimalApiTemplates.First(x => x.Contains(GetTemplateName(model, existingEndpointsFile: false))), dictParams);
+                    var result = templateInvoker.InvokeTemplate(minimalApiT4Generator, dictParams);
                     using (var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(result)))
                     {
                         await CodeGeneratorHelper.AddFileHelper(FileSystem, endpointsFilePath, sourceStream);
@@ -266,7 +269,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
 
         internal static string GetTemplateName(MinimalApiGeneratorCommandLineModel model, bool existingEndpointsFile)
         {
-            string templateNameWithoutExtension = string.Empty;
+            string templateNameWithoutExtension;
             if (existingEndpointsFile)
             {
                 templateNameWithoutExtension = string.IsNullOrEmpty(model.DataContextClass) ? Constants.MinimalApiNoClassTemplate : Constants.MinimalApiEfNoClassTemplate;

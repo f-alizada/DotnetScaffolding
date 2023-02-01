@@ -8,10 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
+using Microsoft.DotNet.Scaffolding.Shared.T4.Templating;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Web.CodeGeneration;
 using Microsoft.VisualStudio.Web.CodeGeneration.CommandLine;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
+using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating;
 
@@ -124,7 +126,8 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor
 
             foreach (var razorPageTemplateToExecute in razorPageTemplatesToExecute)
             {
-                var result = templateInvoker.InvokeTemplate(razorPageTemplateToExecute, dictParams);
+                var razorPageT4Template = T4TemplateHelper.CreateT4Generator(_serviceProvider, razorPageTemplateToExecute);
+                var result = templateInvoker.InvokeTemplate(razorPageT4Template, dictParams);
                 string extension = Constants.CodeFileExtension;
                 if (razorPageTemplateToExecute.Contains("cshtml", StringComparison.OrdinalIgnoreCase))
                 {

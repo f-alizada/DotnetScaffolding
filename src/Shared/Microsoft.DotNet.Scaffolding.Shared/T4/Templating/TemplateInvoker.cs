@@ -1,9 +1,8 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4;
 
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
+namespace Microsoft.DotNet.Scaffolding.Shared.T4.Templating
 {
     /// <summary>
     /// Contains useful helper functions for running visual studio text transformation.
@@ -26,38 +25,26 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
         /// <summary>
         /// Executes a code generator template to generate the code.
         /// </summary>
-        /// <param name="templatePath">Full path of the template file.</param>
+        /// <param name="template">ITextTransformation template object</param>
         /// <param name="templateParameters">Parameters for the template.
         /// These parameters can be accessed in text template using a parameter directive.
         /// The values passed in must be either serializable or 
-        /// extend <see cref="System.MarshalByRefObject"/> type.</param>
+        /// extend <see cref="MarshalByRefObject"/> type.</param>
         /// <returns>Generated code if there were no processing errors. Throws 
-        /// <see cref="System.InvalidOperationException" /> otherwise.
+        /// <see cref="InvalidOperationException" /> otherwise.
         /// </returns>
-        public string InvokeTemplate(string templatePath,
-            IDictionary<string, object> templateParameters)
+        public string InvokeTemplate(ITextTransformation template, IDictionary<string, object> templateParameters)
         {
-            if (string.IsNullOrEmpty(templatePath))
-            {
-                //ExceptionUtil.ThrowStringEmptyArgumentException(nameof(templatePath));
-            }
-
-            if (templateParameters == null)
-            {
-                throw new ArgumentNullException(nameof(templateParameters));
-            }
-
-            var contextTemplate = T4TemplateHelper.CreateT4Generator(_serviceProvider, templatePath);
             foreach (var param in templateParameters)
             {
-                contextTemplate.Session.Add(param.Key, param.Value);
+                template.Session.Add(param.Key, param.Value);
             }
 
             string generatedCode = string.Empty;
-            if (contextTemplate != null)
+            if (template != null)
             {
-                contextTemplate.Initialize();
-                generatedCode = ProcessTemplate(contextTemplate);
+                template.Initialize();
+                generatedCode = ProcessTemplate(template);
             }
             return generatedCode;
         }

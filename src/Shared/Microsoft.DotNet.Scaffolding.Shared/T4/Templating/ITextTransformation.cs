@@ -4,7 +4,7 @@
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.T4
+namespace Microsoft.DotNet.Scaffolding.Shared.T4.Templating
 {
     /// <summary>
     ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to

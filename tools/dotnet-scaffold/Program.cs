@@ -168,7 +168,7 @@ namespace Microsoft.DotNet.Tools.Scaffold
 
         private static int ExecuteCodeGenDesign(string[] args)
         {
-            System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Launch();
             string projectPath = string.Empty;
             if (string.IsNullOrEmpty(projectPath))
             {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
+namespace Microsoft.DotNet.Scaffolding.Shared.T4.Templating
 {
     /// <summary>
     /// Contains information about result of running a

@@ -22,7 +22,6 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
 {
     internal class EntityFrameworkModelProcessor
     {
-        private const string EFSqlServerPackageName = "Microsoft.EntityFrameworkCore.SqlServer";
         private const string MySqlException = nameof(MySqlException);
         private const string NewDbContextFolderName = "Data";
         private DbProvider _databaseProvider;
@@ -238,6 +237,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                 await GetDbContextT4(startupType: startupType, programType: programType);
             }
         }
+
         public ContextProcessingStatus ContextProcessingStatus { get; private set; }
         public ModelMetadata ModelMetadata { get; private set; }
 
@@ -389,20 +389,22 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             var dbContextTemplateModel = new NewDbContextTemplateModel(_dbContextFullTypeName, _modelTypeSymbol, programType, nullableEnabled);
             ContextProcessingStatus = ContextProcessingStatus.ContextAdded;
             bool useTopLevelsStatements = await ProjectModifierHelper.IsUsingTopLevelStatements(_modelTypesLocator);
+            await _dbContextEditorServices.AddNewContextT4(dbContextTemplateModel: dbContextTemplateModel);
+            var parameters = new Dictionary<string, string>
+            {
+                { nameof(NewDbContextTemplateModel.DbContextTypeName),  dbContextTemplateModel.DbContextTypeName },
+                { nameof(NewDbContextTemplateModel.DbContextNamespace),  dbContextTemplateModel.DbContextNamespace },
+                { "dataBaseName", dbContextTemplateModel.DbContextTypeName + "-" + Guid.NewGuid().ToString()},
+                { "databaseProvider", _databaseProvider.ToString() },
+                { "useTopLevelStatements", useTopLevelsStatements.ToString() }
+            };
+
             //minimal hosting scenario
             if (startupType == null)
             {
-                await _dbContextEditorServices.AddNewContextT4(dbContextTemplateModel: dbContextTemplateModel);
                 if (programType != null)
                 {
-                    var parameters = new Dictionary<string, string>
-                    {
-                        { nameof(NewDbContextTemplateModel.DbContextTypeName),  dbContextTemplateModel.DbContextTypeName },
-                        { nameof(NewDbContextTemplateModel.DbContextNamespace),  dbContextTemplateModel.DbContextNamespace },
-                        { "dataBaseName", dbContextTemplateModel.DbContextTypeName + "-" + Guid.NewGuid().ToString()},
-                        { "databaseProvider", _databaseProvider.ToString() },
-                        { "useTopLevelStatements", useTopLevelsStatements.ToString() }
-                    };
+
                     _programEditResult = _dbContextEditorServices.EditStartupForNewContext(programType, parameters);
                 }
 
@@ -417,18 +419,10 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             }
             else
             {
-                await _dbContextEditorServices.AddNewContextT4(dbContextTemplateModel: dbContextTemplateModel);
-                var parameters = new Dictionary<string, string>
-                {
-                    { nameof(NewDbContextTemplateModel.DbContextTypeName),  dbContextTemplateModel.DbContextTypeName },
-                    { nameof(NewDbContextTemplateModel.DbContextNamespace),  dbContextTemplateModel.DbContextNamespace },
-                    { "dataBaseName", dbContextTemplateModel.DbContextTypeName + "-" + Guid.NewGuid().ToString()},
-                    { "databaseProvider", _databaseProvider.ToString() },
-                    { "useTopLevelStatements", useTopLevelsStatements.ToString() }
-                };
                 _startupEditResult = _dbContextEditorServices.EditStartupForNewContext(startupType, parameters);
             }
         }
+
         private async Task GenerateNewDbContextAndRegisterProgramFile(ModelType programType)
         {
             AssemblyAttributeGenerator assemblyAttributeGenerator = GetAssemblyAttributeGenerator();

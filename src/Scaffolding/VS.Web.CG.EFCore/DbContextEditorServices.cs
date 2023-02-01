@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -15,8 +16,9 @@ using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.DotNet.Scaffolding.Shared.CodeModifier;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
-using Microsoft.VisualBasic;
+using Microsoft.DotNet.Scaffolding.Shared.T4.Templating;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
+using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.Templates.DbContext;
 using Microsoft.VisualStudio.Web.CodeGeneration.Templating;
 using Newtonsoft.Json.Linq;
 
@@ -25,13 +27,12 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
     public class DbContextEditorServices : IDbContextEditorServices
     {
         private readonly IApplicationInfo _applicationInfo;
-        //private readonly ILibraryManager _libraryManager;
         private readonly ITemplating _templatingService;
         private readonly IFilesLocator _filesLocator;
         private readonly IFileSystem _fileSystem;
         private readonly IProjectContext _projectContext;
         private readonly IConnectionStringsWriter _connectionStringsWriter;
-
+        private readonly IServiceProvider _serviceProvider;
         //private const strings
         private const string ConfigureServices = nameof(ConfigureServices);
         private const string IServiceCollection = nameof(IServiceCollection);
@@ -45,8 +46,9 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             IApplicationInfo applicationInfo,
             IFilesLocator filesLocator,
             ITemplating templatingService,
-            IConnectionStringsWriter connectionStringsWriter)
-            : this (projectContext, applicationInfo, filesLocator, templatingService, connectionStringsWriter, DefaultFileSystem.Instance)
+            IConnectionStringsWriter connectionStringsWriter,
+            IServiceProvider serviceProvider)
+            : this(projectContext, applicationInfo, filesLocator, templatingService, connectionStringsWriter, DefaultFileSystem.Instance, serviceProvider)
         {
         }
 
@@ -56,7 +58,8 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             IFilesLocator filesLocator,
             ITemplating templatingService,
             IConnectionStringsWriter connectionStringsWriter,
-            IFileSystem fileSystem)
+            IFileSystem fileSystem,
+            IServiceProvider serviceProvider)
         {
             _projectContext = projectContext;
             _applicationInfo = applicationInfo;
@@ -64,6 +67,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             _templatingService = templatingService;
             _fileSystem = fileSystem;
             _connectionStringsWriter = connectionStringsWriter;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<SyntaxTree> AddNewContext(NewDbContextTemplateModel dbContextTemplateModel)
@@ -77,16 +81,28 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             return await AddNewContextItemsInternal(templateName, dbContextTemplateModel);
         }
 
-        public async Task<SyntaxTree> AddNewContextT4(NewDbContextTemplateModel dbContextTemplateModel)
+        public async Task AddNewContextT4(NewDbContextTemplateModel dbContextTemplateModel)
         {
+            System.Diagnostics.Debugger.Launch();
             if (dbContextTemplateModel == null)
             {
                 throw new ArgumentNullException(nameof(dbContextTemplateModel));
             }
 
-            var templateName = "DataContextGenerator.tt";
+            var templateName = $"{nameof(DbContextGenerator)}.tt";
 
-            return await AddNewContextItemsInternal(templateName, dbContextTemplateModel);
+            //var minimalApiTemplates =
+            TemplateInvoker templateInvoker = new TemplateInvoker(_serviceProvider);
+            var dictParams = new Dictionary<string, object>()
+            {
+                { "Model" , dbContextTemplateModel }
+            };
+
+            var result = templateInvoker.InvokeTemplate(null, dictParams);
+            using (var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(result)))
+            {
+                await CodeGeneratorHelper.AddFileHelper(_fileSystem, "blah", sourceStream);
+            }
         }
 
         private async Task<SyntaxTree> AddNewContextItemsInternal(string templateName, NewDbContextTemplateModel dbContextTemplateModel)
@@ -116,7 +132,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
 
         public EditSyntaxTreeResult AddModelToContext(ModelType dbContext, ModelType modelType, bool nullableEnabled)
         {
-            return AddModelToContext(dbContext, modelType, new Dictionary<string, string>() { { nameof(nullableEnabled), nullableEnabled.ToString() }});
+            return AddModelToContext(dbContext, modelType, new Dictionary<string, string>() { { nameof(nullableEnabled), nullableEnabled.ToString() } });
         }
 
         private string GetSafeModelName(string name, ITypeSymbol dbContext)
@@ -219,24 +235,24 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             string leadingTrivia = minimalHostingTemplate ? string.Empty : statementLeadingTrivia;
             switch (databaseProvider)
             {
-                case DbProvider.SQLite: 
+                case DbProvider.SQLite:
                     textToAddAtEnd =
                         leadingTrivia + "{0}.AddDbContext<{1}>(options =>" + additionalNewline +
                         statementLeadingTrivia + additionalLeadingTrivia + "    options.UseSqlite({2}.GetConnectionString(\"{1}\"){3}));" + Environment.NewLine;
                     break;
-            
+
                 case DbProvider.SqlServer:
                     textToAddAtEnd =
                         leadingTrivia + "{0}.AddDbContext<{1}>(options =>" + additionalNewline +
                         statementLeadingTrivia + additionalLeadingTrivia + "    options.UseSqlServer({2}.GetConnectionString(\"{1}\"){3}));" + Environment.NewLine;
                     break;
-                
+
                 case DbProvider.CosmosDb:
                     textToAddAtEnd =
                         leadingTrivia + "{0}.AddDbContext<{1}>(options =>" + additionalNewline +
                         statementLeadingTrivia + additionalLeadingTrivia + "    options.UseCosmos({2}.GetConnectionString(\"{1}\"), \"DATABASE_NAME\"));" + Environment.NewLine;
                     break;
-                
+
                 case DbProvider.Postgres:
                     textToAddAtEnd =
                         leadingTrivia + "{0}.AddDbContext<{1}>(options =>" + additionalNewline +
@@ -261,7 +277,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                 if (namedType != null &&
                     namedType.ContainingAssembly.Name == "Microsoft.Extensions.Configuration.Abstractions" &&
                     namedType.ContainingNamespace.ToDisplayString() == "Microsoft.Extensions.Configuration" &&
-                    namedType.Name == "IConfiguration") 
+                    namedType.Name == "IConfiguration")
                 {
                     return pSymbol;
                 }
@@ -302,7 +318,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                     string.Format("Server=(localdb)\\mssqllocaldb;Database={0};Trusted_Connection=True;MultipleActiveResultSets=true",
                         dataBaseName);
             }
-            
+
             // Json.Net loses comments so the above code if requires any changes loses
             // comments in the file. The writeContent bool is for saving
             // a specific case without losing comments - when no changes are needed.
@@ -404,7 +420,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                 parameters.TryGetValue("dataBaseName", out var dataBaseName);
                 parameters.TryGetValue("databaseProvider", out var dataContextTypeString);
                 DbProvider dataContextType = DbProvider.SqlServer;
-                if (Enum.TryParse(typeof(DbProvider), dataContextTypeString, ignoreCase:true, out var dataContextTypeObj))
+                if (Enum.TryParse(typeof(DbProvider), dataContextTypeString, ignoreCase: true, out var dataContextTypeObj))
                 {
                     dataContextType = (DbProvider)dataContextTypeObj;
                 }
@@ -546,6 +562,24 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                     baseFolders: new[] { "DbContext" },
                     projectContext: _projectContext);
             }
+        }
+
+
+        private static ITextTransformation CreateT4DbContextTemplate(IServiceProvider serviceProvider, string templatePath)
+        {
+            if (string.IsNullOrEmpty(templatePath))
+            {
+                return null;
+            }
+
+            var host = new TextTemplatingEngineHost(serviceProvider)
+            {
+                TemplateFile = templatePath
+            };
+
+            ITextTransformation contextTemplate = null;
+            //contextTemplate = new DbContextGenerator { Host = host };
+            return contextTemplate;
         }
     }
 }

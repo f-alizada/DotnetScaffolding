@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
+namespace Microsoft.DotNet.Scaffolding.Shared.T4.Templating
 {
     /// <summary>
     /// Services for invoking T4 text templates for code generation.
@@ -10,7 +10,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
         /// <summary>
         /// Invokes a T4 text template and returns the result.
         /// </summary>
-        /// <param name="templatePath">Full path of T4 text template file.</param>
+        /// <param name="template">ITextTransformation template object.</param>
         /// <param name="templateParameters">Parameters for template execution.
         /// These parameters can be accessed in text template using a parameter directive.
         /// The values passed in must be either serializable or 
@@ -19,7 +19,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
         /// <see cref="System.InvalidOperationException" /> otherwise.
         /// </returns>
         string InvokeTemplate(
-            string templatePath,
+            ITextTransformation template,
             IDictionary<string, object> templateParameters);
     }
 }

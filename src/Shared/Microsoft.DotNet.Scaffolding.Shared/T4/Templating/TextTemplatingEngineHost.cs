@@ -9,7 +9,7 @@ using System.Text;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.VisualStudio.TextTemplating;
 
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templating
+namespace Microsoft.DotNet.Scaffolding.Shared.T4.Templating
 {
     /// <summary>
     ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to

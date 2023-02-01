@@ -98,7 +98,7 @@ if ((RazorPageModelValueAcquired == false))
 }
 if ((RazorPageModelValueAcquired == false))
 {
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("RazorPageModel");
+    object data = global::Microsoft.DotNet.Scaffolding.Shared.T4.Templating.CallContext.LogicalGetData("RazorPageModel");
     if ((data != null))
     {
         this._RazorPageModelField = ((global::Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Razor.RazorPageGeneratorModel)(data));

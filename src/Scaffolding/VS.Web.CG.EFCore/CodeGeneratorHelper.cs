@@ -1,8 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Web.CodeGeneration;
 
-namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Common
+namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
 {
     internal static class CodeGeneratorHelper
     {
