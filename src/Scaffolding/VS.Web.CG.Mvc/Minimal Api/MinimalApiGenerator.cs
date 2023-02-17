@@ -60,7 +60,7 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc.MinimalApi
             ProjectContext = projectContext ?? throw new ArgumentNullException(nameof(projectContext));
             Workspace = workspace ?? throw new ArgumentNullException(nameof(workspace));
             EntityFrameworkService = entityframeworkService ?? throw new ArgumentNullException(nameof(entityframeworkService));
-            ConsoleLogger = new DotNet.MSIdentity.Shared.ConsoleLogger(jsonOutput: false);
+            ConsoleLogger = new ConsoleLogger(jsonOutput: false);
         }
 
         /// <summary>

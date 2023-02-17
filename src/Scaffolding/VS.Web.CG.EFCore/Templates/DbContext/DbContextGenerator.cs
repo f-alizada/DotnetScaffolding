@@ -25,9 +25,11 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.Template
         public virtual string TransformText()
         {
 
+    var namespaceName = string.IsNullOrEmpty(Model.DbContextNamespace) ? Model.ProjectName : Model.DbContextNamespace;
     var usings = new List<string>
     {
-        "Microsoft.AspNetCore.Mvc.RazorPages"
+        "Microsoft.AspNetCore.Mvc.RazorPages",
+        "Microsoft.EntityFrameworkCore"
     };
 
     string baseClassName;
@@ -41,7 +43,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.Template
     }
 
             this.Write("namespace ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(Model.DbContextNamespace));
+            this.Write(this.ToStringHelper.ToStringWithCulture(namespaceName));
             this.Write(";\r\npublic class ");
             this.Write(this.ToStringHelper.ToStringWithCulture(Model.DbContextTypeName));
             this.Write(" : ");

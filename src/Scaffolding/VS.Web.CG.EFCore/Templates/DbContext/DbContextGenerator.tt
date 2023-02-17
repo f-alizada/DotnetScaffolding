@@ -3,9 +3,11 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Text" #>
 <#
+    var namespaceName = string.IsNullOrEmpty(Model.DbContextNamespace) ? Model.ProjectName : Model.DbContextNamespace;
     var usings = new List<string>
     {
-        "Microsoft.AspNetCore.Mvc.RazorPages"
+        "Microsoft.AspNetCore.Mvc.RazorPages",
+        "Microsoft.EntityFrameworkCore"
     };
 
     string baseClassName;
@@ -18,7 +20,7 @@
         baseClassName = "DbContext";
     }
 #>
-namespace <#= Model.DbContextNamespace #>;
+namespace <#= namespaceName #>;
 public class <#= Model.DbContextTypeName #> : <#= baseClassName #>
 {
     public <#= Model.DbContextTypeName #> (DbContextOptions<<#= Model.DbContextTypeName #>> options)

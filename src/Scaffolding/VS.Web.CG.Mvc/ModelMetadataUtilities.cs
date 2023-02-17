@@ -74,13 +74,14 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
             ILogger logger,
             string areaName)
         {
+            //System.Diagnostics.Debugger.Launch();
             ModelType model = ValidationUtil.ValidateType(commandLineModel.ModelClass, "model", modelTypesLocator);
             // Validation successful
             Contract.Assert(model != null, MessageStrings.ValidationSuccessfull_modelUnset);
 
             ModelType dataContext = null;
             var dbContextFullName = string.Empty;
-            ContextProcessingResult modelMetadata  = new ContextProcessingResult()
+            ContextProcessingResult modelMetadata = new ContextProcessingResult()
             {
                 ContextProcessingStatus = ContextProcessingStatus.MissingContext,
                 ModelMetadata = null
@@ -99,7 +100,8 @@ namespace Microsoft.VisualStudio.Web.CodeGenerators.Mvc
                     dbContextFullName,
                     model,
                     areaName,
-                    databaseProvider: commandLineModel.DatabaseProvider);
+                    databaseProvider: commandLineModel.DatabaseProvider,
+                    commandLineModel.T4Templating);
             }
 
             return new ModelTypeAndContextModel()

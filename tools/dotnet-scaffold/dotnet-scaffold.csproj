@@ -27,6 +27,7 @@
   <ItemGroup>
     <None Pack="true" Include="$(RepoRoot)\src\Scaffolding\VS.Web.CG.Mvc\Templates\T4\RazorPages\**" CopyToPublishDirectory="Always" LinkBase="Templates\T4\RazorPages\" />
     <None Pack="true" Include="$(RepoRoot)\src\Scaffolding\VS.Web.CG.Mvc\Templates\T4\MinimalApi\**" CopyToPublishDirectory="Always" LinkBase="Templates\T4\MinimalApi\" />
+    <None Pack="true" Include="$(RepoRoot)\src\Scaffolding\VS.Web.CG.EFCore\Templates\DbContext\**" CopyToPublishDirectory="Always" LinkBase="Templates\T4\DbContext\" />
   </ItemGroup>
 </Project>
 

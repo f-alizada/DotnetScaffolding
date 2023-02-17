@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,7 +62,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.Test
             var filesLocator = new FilesLocator();
             var compilationService = new RoslynCompilationService(_appInfo, _loader, _projectContext);
             var templatingService = new Templating.RazorTemplating(compilationService);
-            _dbContextEditorServices = new DbContextEditorServices(_projectContext, _appInfo, filesLocator, templatingService, connectionStringsWriter.Object);
+            _dbContextEditorServices = new DbContextEditorServices(_projectContext, _appInfo, filesLocator, templatingService, connectionStringsWriter.Object, _serviceProvider.Object);
 
             return new EntityFrameworkServices(
                 _projectContext,
@@ -92,7 +91,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.Test
             new MsBuildProjectSetupHelper().SetupProjects(fileProvider, _output);
         }
 
-        [Fact (Skip = "Need to workaround the fact that the test doesn't run in the project's dependency context.")]
+        [Fact(Skip = "Need to workaround the fact that the test doesn't run in the project's dependency context.")]
         public async void TestGetModelMetadata_WithDbContext()
         {
             using (var fileProvider = new TemporaryFileProvider())

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -17,6 +18,7 @@ using Microsoft.DotNet.Scaffolding.Shared.CodeModifier;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.DotNet.Scaffolding.Shared.T4.Templating;
+using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.Templates.DbContext;
 using Microsoft.VisualStudio.Web.CodeGeneration.Templating;
@@ -81,9 +83,8 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             return await AddNewContextItemsInternal(templateName, dbContextTemplateModel);
         }
 
-        public async Task AddNewContextT4(NewDbContextTemplateModel dbContextTemplateModel)
+        public async Task<SyntaxTree> AddNewContextT4(NewDbContextTemplateModel dbContextTemplateModel)
         {
-            System.Diagnostics.Debugger.Launch();
             if (dbContextTemplateModel == null)
             {
                 throw new ArgumentNullException(nameof(dbContextTemplateModel));
@@ -91,18 +92,23 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
 
             var templateName = $"{nameof(DbContextGenerator)}.tt";
 
-            //var minimalApiTemplates =
             TemplateInvoker templateInvoker = new TemplateInvoker(_serviceProvider);
             var dictParams = new Dictionary<string, object>()
             {
                 { "Model" , dbContextTemplateModel }
             };
 
-            var result = templateInvoker.InvokeTemplate(null, dictParams);
-            using (var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(result)))
+            var templatePath = _filesLocator.GetFilePath(templateName, TemplateFolders);
+            var t4Template = CreateT4DbContextTemplate(templatePath);
+            var newContextContent = templateInvoker.InvokeTemplate(t4Template, dictParams);
+            var dbContextFilePath = EntityFrameworkModelProcessor.GetPathForNewContext(dbContextTemplateModel.DbContextTypeName, areaName: string.Empty, _applicationInfo.ApplicationBasePath);
+            using (var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(newContextContent)))
             {
-                await CodeGeneratorHelper.AddFileHelper(_fileSystem, "blah", sourceStream);
+                await CodeGeneratorHelper.AddFileHelper(_fileSystem, dbContextFilePath, sourceStream);
             }
+            var sourceText = SourceText.From(newContextContent);
+
+            return CSharpSyntaxTree.ParseText(sourceText);
         }
 
         private async Task<SyntaxTree> AddNewContextItemsInternal(string templateName, NewDbContextTemplateModel dbContextTemplateModel)
@@ -559,27 +565,37 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                 return TemplateFoldersUtilities.GetTemplateFolders(
                     containingProject: "Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore",
                     applicationBasePath: _applicationInfo.ApplicationBasePath,
-                    baseFolders: new[] { "DbContext" },
+                    baseFolders: new[] { "T4\\DbContext" },
                     projectContext: _projectContext);
             }
         }
 
-
-        private static ITextTransformation CreateT4DbContextTemplate(IServiceProvider serviceProvider, string templatePath)
+        private ITextTransformation CreateT4DbContextTemplate(string templatePath)
         {
             if (string.IsNullOrEmpty(templatePath))
             {
                 return null;
             }
 
-            var host = new TextTemplatingEngineHost(serviceProvider)
+            var host = new TextTemplatingEngineHost(_serviceProvider)
             {
                 TemplateFile = templatePath
             };
 
-            ITextTransformation contextTemplate = null;
-            //contextTemplate = new DbContextGenerator { Host = host };
+            var contextTemplate = new DbContextGenerator { Host = host };
+            contextTemplate.Session = host.CreateSession();
             return contextTemplate;
         }
+
+        private IEnumerable<string> GetTemplateFoldersT4(string appBasePath, string baseFolder, IProjectContext projectContext)
+        {
+            return TemplateFoldersUtilities.GetTemplateFolders(
+                containingProject: ThisAssemblyName,
+                applicationBasePath: appBasePath,
+                baseFolders: new[] { baseFolder },
+                projectContext: projectContext);
+        }
+
+        private readonly string ThisAssemblyName = typeof(Constants).GetTypeInfo().Assembly.GetName().Name;
     }
 }

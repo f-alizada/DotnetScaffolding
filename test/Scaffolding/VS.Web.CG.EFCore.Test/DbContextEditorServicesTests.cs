@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -11,7 +10,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.Test;
@@ -126,10 +124,10 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration
             var configAssembly =
                 Assembly.Load(new AssemblyName("Microsoft.Extensions.Configuration.Abstractions"));
             var efReference = MetadataReference.CreateFromFile(testAssembly.Location);
-            
+
             var configReference = MetadataReference.CreateFromFile(configAssembly.Location);
 
-            
+
             var compilation = CSharpCompilation.Create("DoesNotMatter", new[] { startupTree, contextTree }, new[] { efReference, configReference });
 
             DbContextEditorServices testObj = GetTestObject();
@@ -176,11 +174,12 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration
                 new Mock<IFilesLocator>().Object,
                 new Mock<ITemplating>().Object,
                 new Mock<IConnectionStringsWriter>().Object,
-                fs != null ? fs : new MockFileSystem());
+                fs != null ? fs : new MockFileSystem(),
+                new Mock<IServiceProvider>().Object);
         }
 
         public static IEnumerable<object[]> AddDbContextStringData =>
-            new []
+            new[]
             {
                 new object[] { true, string.Empty, DbProvider.SqlServer, "options.UseSqlServer" },
                 new object[] { false, string.Empty, DbProvider.SqlServer, "options.UseSqlServer" },

@@ -3,13 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
-    
+
 namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
 {
     public class NewDbContextTemplateModel
     {
-        public NewDbContextTemplateModel(string dbContextName, ModelType modelType, ModelType programType, bool nullableEnabled)
+        public NewDbContextTemplateModel(string dbContextName, string projectName, ModelType modelType, ModelType programType, bool nullableEnabled)
         {
             if (dbContextName == null)
             {
@@ -26,13 +27,13 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                 throw new ArgumentNullException(nameof(programType));
             }
 
+            ProjectName = projectName ?? throw new ArgumentNullException(nameof(projectName));
             var modelNamespace = modelType.Namespace;
-
             ModelTypeName = modelType.Name;
             ModelTypeFullName = modelType.FullName;
             ProgramTypeName = programType.Name;
             ProgramNamespace = programType.Namespace;
-            RequiredNamespaces = new HashSet<string>();
+            RequiredNamespaces = new HashSet<string> { EfConstants.EntityFrameworkCoreNamespace };
             NullableEnabled = nullableEnabled;
             var classNameModel = new ClassNameModel(dbContextName);
 
@@ -52,6 +53,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
         public string DbContextNamespace { get; private set; }
 
         public string ModelTypeName { get; private set; }
+        public string ProjectName { get; private set; }
         public string ModelTypeFullName { get; private set; }
 
         public string ProgramTypeName { get; private set; }

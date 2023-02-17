@@ -27,18 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Templates\DbContext\DbContextGenerator.Interfaces.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Templates\DbContext\DbContextGenerator.cs">
-      <DependentUpon>DbContextGenerator.tt</DependentUpon>
+    <None Update="Templates\DbContext\DbContextGenerator.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
+      <DependentUpon>DbContextGenerator.tt</DependentUpon>
+    </None>
     <None Update="Templates\DbContext\DbContextGenerator.tt">
       <LastGenOutput>DbContextGenerator.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
@@ -47,5 +40,13 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Templates\DbContext\DbContextGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DbContextGenerator.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

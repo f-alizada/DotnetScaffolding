@@ -13,7 +13,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
     {
         Task<SyntaxTree> AddNewContext(NewDbContextTemplateModel dbContextTemplateModel);
 
-        Task AddNewContextT4(NewDbContextTemplateModel dbContextTemplateModel);
+        Task<SyntaxTree> AddNewContextT4(NewDbContextTemplateModel dbContextTemplateModel);
 
         EditSyntaxTreeResult AddModelToContext(ModelType dbContext, ModelType modelType, bool nullableEnabled);
 

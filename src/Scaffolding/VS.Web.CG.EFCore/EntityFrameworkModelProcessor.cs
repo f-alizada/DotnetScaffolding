@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.DotNet.Scaffolding.Shared.Project;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
@@ -23,7 +24,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
     internal class EntityFrameworkModelProcessor
     {
         private const string MySqlException = nameof(MySqlException);
-        private const string NewDbContextFolderName = "Data";
+        private static string NewDbContextFolderName = "Data";
         private DbProvider _databaseProvider;
         private string _dbContextFullTypeName;
         private ModelType _modelTypeSymbol;
@@ -74,7 +75,8 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             _fileSystem = fileSystem;
             _workspace = workspace;
             _databaseProvider = databaseProvider;
-            _assemblyAttributeGenerator = GetAssemblyAttributeGenerator();
+            //_assemblyAttributeGenerator = new AssemblyAttributeGenerator(Assembly.GetExecutingAssembly());
+            _assemblyAttributeGenerator = null;
         }
 
         public async Task Process()
@@ -223,6 +225,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
 
         public async Task ProcessT4()
         {
+            System.Diagnostics.Debugger.Launch();
             var programType = _modelTypesLocator.GetType("<Program>$").FirstOrDefault() ?? _modelTypesLocator.GetType("Program").FirstOrDefault();
             var programDocument = _modelTypesLocator.GetAllDocuments().Where(d => d.Name.EndsWith("Program.cs")).FirstOrDefault();
             var dbContextSymbols = _modelTypesLocator.GetType(_dbContextFullTypeName).ToList();
@@ -231,12 +234,74 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             if (!dbContextSymbols.Any())
             {
                 await CreateDbContextT4(startupType: startupType, programType: programType);
+                var projectCompilation = await _workspace.CurrentSolution.Projects
+                .First(project => project.AssemblyName == _projectContext.AssemblyName)
+                .GetCompilationAsync();
+                var newprojectCompilation = projectCompilation.AddSyntaxTrees(_dbContextSyntaxTree);
+                var thang = newprojectCompilation.GetSemanticModel(_dbContextSyntaxTree);
+                var taarp = thang.GetTypeInfo(_dbContextSyntaxTree.GetRoot());
+                var tyyypew = taarp.Type;
+                //DbContextActivator.CreateInstance(tyyypew);
+                var assss = newprojectCompilation.Assembly.GetMetadata();
+                var allTypes = newprojectCompilation.GetTypeByMetadataName(_dbContextFullTypeName);
+                _reflectedTypesProvider = GetReflectedTypesProvider(
+                    projectCompilation,
+                    c =>
+                    {
+                        c = c.AddSyntaxTrees(_dbContextSyntaxTree);
+                        /*                        if (_programEditResult.Edited)
+                                                {
+                                                    c = c.ReplaceSyntaxTree(_programEditResult.OldTree, _programEditResult.NewTree);
+                                                }*/
+                        return c;
+                    });
+
+                var compilationErrors = _reflectedTypesProvider.GetCompilationErrors();
+                _dbContextError = string.Format(
+                    MessageStrings.DbContextCreationError,
+                    (compilationErrors == null
+                        ? string.Empty
+                        : string.Join(Environment.NewLine, compilationErrors)));
+
+                var dbType = _reflectedTypesProvider.GetReflectedType(_dbContextFullTypeName, lookInDependencies: true);
+
+                //var alltypes = projectCompilation.Assembly.TypeNames;
+                var newtypes = _reflectedTypesProvider.GetAllTypesInProject();
+                //Type dbType = GetDbContextTypeFromCode("ApplicationDbContext", code);
+                //DbContext dbContextInstance = TryCreateContextUsingAppCode(dbType, dbType);
             }
             else
             {
                 await GetDbContextT4(startupType: startupType, programType: programType);
             }
+
         }
+
+        /*        private Type GetDbContextTypeFromCode(string dbContextName, string code)
+                {
+                    System.Diagnostics.Debugger.Launch();
+                    var roslynProject = _workspace.CurrentSolution.Projects
+                       .First(project => project.AssemblyName == _projectContext.AssemblyName);
+                    *//*            var doc = roslynProject.AddDocument(dbContextName, code);
+                                roslynProject.TryGetCompilation(out var comp);
+                                DbContextActivator.CreateInstance();
+                                comp.GetTypeByMetadataName($"Blah.{dbContextName}");*//*
+                    //var one = semanticModel.GetTypeInfo();
+                    return null;
+                }*/
+
+        /*        public static async Task EnsureDbCreatedAndSeedAsync<T>(this DbContextOptions<T> options) where T : DbContext
+                {
+                    var builder = new DbContextOptionsBuilder<T>(options)
+                        .LogTo(message => Debug.WriteLine(message));
+                    ConstructorInfo c = typeof(T).GetConstructor(new[] { typeof(DbContextOptions<T>) });
+                    T context = (T)c.Invoke(new object[] { builder.Options });
+                    if (await context.Database.EnsureCreatedAsync())
+                    {
+
+                        // Add the code to seed the database
+                    }
+                }*/
 
         public ContextProcessingStatus ContextProcessingStatus { get; private set; }
         public ModelMetadata ModelMetadata { get; private set; }
@@ -379,17 +444,18 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             if (startupType == null)
             {
                 await CreateDbContextT4(startupType, programType);
-                //_dbContextEditorServices.()
             }
         }
 
         private async Task CreateDbContextT4(ModelType startupType, ModelType programType)
         {
             var nullableEnabled = true;
-            var dbContextTemplateModel = new NewDbContextTemplateModel(_dbContextFullTypeName, _modelTypeSymbol, programType, nullableEnabled);
+            var dbContextTemplateModel = new NewDbContextTemplateModel(_dbContextFullTypeName, _projectContext.ProjectName, _modelTypeSymbol, programType, nullableEnabled);
             ContextProcessingStatus = ContextProcessingStatus.ContextAdded;
             bool useTopLevelsStatements = await ProjectModifierHelper.IsUsingTopLevelStatements(_modelTypesLocator);
-            await _dbContextEditorServices.AddNewContextT4(dbContextTemplateModel: dbContextTemplateModel);
+            _dbContextSyntaxTree = await _dbContextEditorServices.AddNewContextT4(dbContextTemplateModel: dbContextTemplateModel);
+            var dbString = await _dbContextSyntaxTree.GetTextAsync();
+            //Type dbType = Type.GetType()
             var parameters = new Dictionary<string, string>
             {
                 { nameof(NewDbContextTemplateModel.DbContextTypeName),  dbContextTemplateModel.DbContextTypeName },
@@ -441,7 +507,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             _logger.LogMessage(string.Format(MessageStrings.GeneratingDbContext, _dbContextFullTypeName));
             bool nullabledEnabled = "enable".Equals(_projectContext.Nullable, StringComparison.OrdinalIgnoreCase);
             bool useTopLevelsStatements = await ProjectModifierHelper.IsUsingTopLevelStatements(_modelTypesLocator);
-            var dbContextTemplateModel = new NewDbContextTemplateModel(_dbContextFullTypeName, _modelTypeSymbol, programType, nullabledEnabled);
+            var dbContextTemplateModel = new NewDbContextTemplateModel(_dbContextFullTypeName, _projectContext.ProjectName, _modelTypeSymbol, programType, nullabledEnabled);
             _dbContextSyntaxTree = await _dbContextEditorServices.AddNewContext(dbContextTemplateModel);
             ContextProcessingStatus = ContextProcessingStatus.ContextAdded;
 
@@ -493,7 +559,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                     ? string.Empty
                     : string.Join(Environment.NewLine, compilationErrors)));
 
-            _dbContextSyntaxTree = _dbContextSyntaxTree.WithFilePath(GetPathForNewContext(dbContextTemplateModel.DbContextTypeName, _areaName));
+            _dbContextSyntaxTree = _dbContextSyntaxTree.WithFilePath(GetPathForNewContext(dbContextTemplateModel.DbContextTypeName, _areaName, _applicationInfo.ApplicationBasePath));
         }
 
         //if not minimal hosting, edit Startup.cs
@@ -514,7 +580,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             // Create a new Context
             _logger.LogMessage(string.Format(MessageStrings.GeneratingDbContext, _dbContextFullTypeName));
             bool nullabledEnabled = "enable".Equals(_projectContext.Nullable, StringComparison.OrdinalIgnoreCase);
-            var dbContextTemplateModel = new NewDbContextTemplateModel(_dbContextFullTypeName, _modelTypeSymbol, programType, nullabledEnabled);
+            var dbContextTemplateModel = new NewDbContextTemplateModel(_dbContextFullTypeName, _projectContext.ProjectName, _modelTypeSymbol, programType, nullabledEnabled);
 
             _dbContextSyntaxTree = await _dbContextEditorServices.AddNewContext(dbContextTemplateModel);
             ContextProcessingStatus = ContextProcessingStatus.ContextAdded;
@@ -567,7 +633,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                     ? string.Empty
                     : string.Join(Environment.NewLine, compilationErrors)));
 
-            _dbContextSyntaxTree = _dbContextSyntaxTree.WithFilePath(GetPathForNewContext(dbContextTemplateModel.DbContextTypeName, _areaName));
+            _dbContextSyntaxTree = _dbContextSyntaxTree.WithFilePath(GetPathForNewContext(dbContextTemplateModel.DbContextTypeName, _areaName, _applicationInfo.ApplicationBasePath));
         }
 
         private ModelMetadata GetModelMetadata(Type dbContextType, Type modelType, Type startupType)
@@ -625,6 +691,7 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
                 OperationReportHandler operationHandler = new OperationReportHandler();
 
                 var assembly = startupType.GetTypeInfo().Assembly;
+                //assembly.GetType("")
                 return DbContextActivator.CreateInstance(dbContextType, assembly, operationHandler);
             }
             catch (Exception ex)
@@ -654,10 +721,9 @@ namespace Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore
             return new AssemblyAttributeGenerator(originalAssembly);
         }
 
-        private string GetPathForNewContext(string contextShortTypeName, string areaName)
+        internal static string GetPathForNewContext(string contextShortTypeName, string areaName, string appBasePath)
         {
             var areaPath = string.IsNullOrEmpty(areaName) ? string.Empty : Path.Combine("Areas", areaName);
-            var appBasePath = _applicationInfo.ApplicationBasePath;
             var outputPath = Path.Combine(
                 appBasePath,
                 areaPath,
